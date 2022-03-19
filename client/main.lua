@@ -159,6 +159,7 @@ local function TableInsert(VehicleEntity, vehicleData)
 		health      = vehicleData.vehicle.health,
 		model       = vehicleData.model,
         blip        = tmpBlip,
+        isGrounded  = false,
 		location    = {
 			x = vehicleData.vehicle.location.x,
 			y = vehicleData.vehicle.location.y,
@@ -443,24 +444,20 @@ local function checkDistanceToForceGrounded(distance)
             if type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].entity) ~= 'nil' then
                 local tmp = LocalVehicles[i]
                 if DoesEntityExist(LocalVehicles[i].entity) then
-
-                    local offset = trailerOffset(LocalVehicles[i].entity)
                     if GetVehicleWheelSuspensionCompression(LocalVehicles[i].entity) == 0 then
-                        SetEntityCoords(tmp.entity, tmp.location.x, tmp.location.y, tmp.location.z - offset)
+                        SetEntityCoords(tmp.entity, tmp.location.x, tmp.location.y, tmp.location.z)
                         SetVehicleOnGroundProperly(tmp.entity)
                         LocalVehicles[i].isGrounded = true
                     end
-
                     if #(GetEntityCoords(PlayerPedId()) - vector3(tmp.location.x, tmp.location.y, tmp.location.z)) < 150 then
                         if not tmp.isGrounded then
-                            SetEntityCoords(tmp.entity, tmp.location.x, tmp.location.y, tmp.location.z - offset)
+                            SetEntityCoords(tmp.entity, tmp.location.x, tmp.location.y, tmp.location.z)
                             SetVehicleOnGroundProperly(tmp.entity)
                             LocalVehicles[i].isGrounded = true
                         end
                     else
                         LocalVehicles[i].isGrounded = false
                     end
-
                     if Config.DebugMode then
                         if not tmp.isGrounded then
                             print("Parking Force Grounded - Plate ("..tmp.plate..") Model ("..tmp.modelname ..") Grounded ("..tostring(LocalVehicles[i].isGrounded)..") ")
@@ -474,6 +471,7 @@ local function checkDistanceToForceGrounded(distance)
         Wait(5000)
     end
 end
+
 
 ------------------------------------------------Commands-----------------------------------------------
 RegisterKeyMapping('park', Lang:t('system.park_or_drive'), 'keyboard', 'F5') 
@@ -642,4 +640,3 @@ CreateThread(function()
         Wait(Config.ForceGroundenInMilSec)
     end
 end)
-
