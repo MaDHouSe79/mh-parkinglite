@@ -254,28 +254,23 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 end)
 
 QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(source, cb, plate, action)
-    MySQL.Async.fetchAll("SELECT * FROM player_parking_vehicles WHERE plate = @plate", {
+    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
 		['@plate'] = plate
     }, function(rs)
 		if type(rs) == 'table' and #rs > 0 and rs[1] then
-			MySQL.Async.execute('DELETE FROM player_parking_vehicles WHERE plate = @plate', {
+			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
 				["@plate"] = plate,
 			})	
 			if action == 'impound' then
-				MySQL.Async.execute('UPDATE player_parking_vehicles SET state = 2, garage = @garage WHERE plate = @plate AND citizenid = @citizenid', {
+				MySQL.Async.execute('UPDATE player_parking SET state = 2, garage = @garage WHERE plate = @plate AND citizenid = @citizenid', {
 					["@plate"]     = plate,
 					["@citizenid"] = rs[1].citizenid,
 					["@garage"]    = 'impoundlot',
 				})
 			end
 			if action ~= 'impound' then
-				MySQL.Async.execute('UPDATE player_parking_vehicles SET state = 0 WHERE plate = @plate', {
+				MySQL.Async.execute('UPDATE player_parking SET state = 0 WHERE plate = @plate', {
 					["@plate"] = plate,
-				})
-			end
-			if UseOnlyForVipPlayers then -- only allow for vip players
-				MySQL.Async.execute('UPDATE player_parking_vips SET hasparked = hasparked - 1 WHERE citizenid = @citizenid', {
-					["@citizenid"] = rs[1].citizenid
 				})
 			end
 			cb({ status  = true })
@@ -298,12 +293,12 @@ AddEventHandler('onResourceStart', function(resource)
 		}, function(vehicles)
 			if type(vehicles) == 'table' and #vehicles > 0 then
 				for _, vehicle in pairs(vehicles) do
-					MySQL.Async.fetchAll("SELECT * FROM player_parking_vehicles WHERE plate = @plate", {
+					MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = @plate", {
 						['@plate'] = vehicle.plate
 					}, function(rs)
 						if type(rs) == 'table' and #rs > 0 then
 							for _, v in pairs(rs) do
-								MySQL.Async.execute('DELETE FROM player_parking_vehicles WHERE plate = @plate', {["@plate"] = vehicle.plate})
+								MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {["@plate"] = vehicle.plate})
 								MySQL.Async.execute('UPDATE player_vehicles SET state = @state WHERE plate = @plate', {["@state"] = Config.ResetState, ["@plate"] = vehicle.plate})					
 							end
 						end
