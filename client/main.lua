@@ -132,10 +132,10 @@ local function LoadEntity(vehicleData, type)
 end
 
 -- this achtion olny runs when you park the vehicle.
-local function DoAction(action)
+local function DoAction(action, data)
     if action == 'drive' then
 		action = nil
-		if LastUsedPlate and vehicles[i].plate == LastUsedPlate then
+		if LastUsedPlate and data.plate == LastUsedPlate then
 			TaskWarpPedIntoVehicle(PlayerPedId(), VehicleEntity, -1)
 			TaskLeaveVehicle(PlayerPedId(), VehicleEntity)
 			LastUsedPlate = nil
@@ -250,7 +250,7 @@ local function SpawnVehicles(vehicles)
                     SetVehicleDoorsLocked(VehicleEntity, 2)
                 end
 				TableInsert(VehicleEntity, vehicles[i])
-				DoAction(action)
+				DoAction(action, vehicles[i])
                 if Config.UseSpawnDelay then Wait(Config.FreezeDelay) end
 				FreezeEntityPosition(VehicleEntity, true)
 			end
@@ -275,7 +275,7 @@ local function SpawnVehicle(vehicleData)
 				SetVehicleDoorsLocked(VehicleEntity, 2)
 			end
 			TableInsert(VehicleEntity, vehicleData)
-			DoAction(action)
+			DoAction(action, vehicleData)
             if Config.UseSpawnDelay then Wait(Config.FreezeDelay) end
 			FreezeEntityPosition(VehicleEntity, true)
 		end
