@@ -365,6 +365,7 @@ local function Drive(player, vehicle)
         if callback.status then
             QBCore.Functions.DeleteVehicle(vehicle.entity)
             QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(player))
+	    if Config.UseParkingBlips then RemoveBlip(vehicle.blip) end
             vehicle = false
             MakeVehicleReadyToDrive(callback.data)
         else
