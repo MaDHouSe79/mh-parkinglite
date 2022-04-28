@@ -258,18 +258,19 @@ QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(sou
 		['@plate'] = plate
     }, function(rs)
 		if type(rs) == 'table' and #rs > 0 and rs[1] then
+			
 			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {
 				["@plate"] = plate,
-			})	
+			})
+
 			if action == 'impound' then
-				MySQL.Async.execute('UPDATE player_parking SET state = 2, garage = @garage WHERE plate = @plate AND citizenid = @citizenid', {
+				MySQL.Async.execute('UPDATE player_vehicles SET state = 2, garage = @garage WHERE plate = @plate AND citizenid = @citizenid', {
 					["@plate"]     = plate,
 					["@citizenid"] = rs[1].citizenid,
 					["@garage"]    = 'impoundlot',
 				})
-			end
-			if action ~= 'impound' then
-				MySQL.Async.execute('UPDATE player_parking SET state = 0 WHERE plate = @plate', {
+			else
+				MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate', {
 					["@plate"] = plate,
 				})
 			end
