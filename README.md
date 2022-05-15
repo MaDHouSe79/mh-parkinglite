@@ -82,7 +82,8 @@ RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate
 end)
 ````
 
-## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua. (For the old vehiclekey script)
+## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua.
+- (For the old vehiclekey script)
 ````lua
 RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate, citizenid)
     if VehicleList then
@@ -101,7 +102,8 @@ RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate
 end)
 ````
 
-## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua. (For the new vehiclekey script)
+## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua. 
+- (For the new vehiclekey script)
 ````lua
 RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate, citizenid)
     local src = source
