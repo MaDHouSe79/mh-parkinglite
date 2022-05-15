@@ -73,7 +73,7 @@ local function RefreshVehicles(src)
                 }
                 if QBCore.Functions.GetPlayer(src) ~= nil and QBCore.Functions.GetPlayer(src).PlayerData.citizenid == v.citizenid then
                     if not Config.ImUsingOtherKeyScript then
-                        TriggerClientEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlayer(src), v.plate)
+                        TriggerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', v.plate)
                     end
                 end
             end
