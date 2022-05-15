@@ -134,7 +134,7 @@ local function LoadEntity(vehicleData, type)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleDoorsLocked(VehicleEntity, 2)
     if type == 'server' then
-        TriggerEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', vehicleData.plate, vehicleData.citizenid)
+        TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', vehicleData.plate)
 	end
     PrepareVehicle(VehicleEntity, vehicleData)
 end
