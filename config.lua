@@ -7,7 +7,7 @@ Config.FreezeDelay            = 50           -- 👉 Default 50, a sort delay fo
 
 Config.UseOwnerNames          = true
 
-Config.UseParkingBlips        = true         -- 👉 if you waant parking blips on the map
+Config.UseParkingBlips        = true         -- 👉 if you want parking blips on the map
 
 Config.CheckForUpdates        = true         -- 👉 If you want to stay updated keep it on true.
 Config.Maxcarparking          = 50           -- 👉 Max allowed cars in world space (Default, dont go to hight)
