@@ -33,7 +33,7 @@ local function CreateParkDisPlay(vehicleData)
     if Config.UseOwnerNames then
         owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n'
     end
-    
+
     model = string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
     plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
     
@@ -134,16 +134,16 @@ local function LoadEntity(vehicleData, type)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleDoorsLocked(VehicleEntity, 2)
     if type == 'server' then
-         TriggerServerEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', vehicleData.plate, vehicleData.citizenid)
+        TriggerServerEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', vehicleData.plate, vehicleData.citizenid)
 	end
     PrepareVehicle(VehicleEntity, vehicleData)
 end
 
 -- this achtion olny runs when you park the vehicle.
-local function DoAction(action, data)
+local function DoAction(action)
     if action == 'drive' then
 		action = nil
-		if LastUsedPlate and data.plate == LastUsedPlate then
+		if LastUsedPlate and vehicles[i].plate == LastUsedPlate then
 			TaskWarpPedIntoVehicle(PlayerPedId(), VehicleEntity, -1)
 			TaskLeaveVehicle(PlayerPedId(), VehicleEntity)
 			LastUsedPlate = nil
@@ -158,7 +158,7 @@ local function TableInsert(VehicleEntity, vehicleData)
     if vehicleData.citizenid == QBCore.Functions.GetPlayerData().citizenid then
         tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = vehicleData.modelname}), vehicleData.vehicle.location)
     end
-	
+
     LocalVehicles[#LocalVehicles+1] = {
 		entity      = VehicleEntity,
 		vehicle     = vehicleData.mods,
@@ -261,7 +261,7 @@ local function SpawnVehicles(vehicles)
                     SetVehicleDoorsLocked(VehicleEntity, 2)
                 end
 				TableInsert(VehicleEntity, vehicles[i])
-				DoAction(action, vehicles[i])
+				DoAction(action)
                 if Config.UseSpawnDelay then Wait(Config.FreezeDelay) end
 				FreezeEntityPosition(VehicleEntity, true)
 			end
@@ -286,7 +286,7 @@ local function SpawnVehicle(vehicleData)
 				SetVehicleDoorsLocked(VehicleEntity, 2)
 			end
 			TableInsert(VehicleEntity, vehicleData)
-			DoAction(action, vehicleData)
+			DoAction(action)
             if Config.UseSpawnDelay then Wait(Config.FreezeDelay) end
 			FreezeEntityPosition(VehicleEntity, true)
 		end
@@ -376,7 +376,6 @@ local function Drive(player, vehicle)
         if callback.status then
             QBCore.Functions.DeleteVehicle(vehicle.entity)
             QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(player))
-	    if Config.UseParkingBlips then RemoveBlip(vehicle.blip) end
             vehicle = false
             MakeVehicleReadyToDrive(callback.data)
         else
@@ -441,6 +440,7 @@ local function ActionVehicle(plate, action)
                     FreezeEntityPosition(LocalVehicles[i].entity, false)
                     if action == 'impound' then
                         DeleteEntity(LocalVehicles[i].entity)
+                        DeleteLocalVehicle(LocalVehicles[i].vehicle)
                     end
                     table.remove(LocalVehicles, i)
                 end
@@ -549,7 +549,6 @@ RegisterNetEvent("qb-parking:client:GetUpdate", function(state)
 end)
 
 
-
 -------------------------------------------------Thread-------------------------------------------------
 CreateThread(function()
     PlayerData = QBCore.Functions.GetPlayerData()
@@ -599,6 +598,7 @@ CreateThread(function()
     end
 end)
 
+
 CreateThread(function()
     if UseParkingSystem then
 		while true do
@@ -622,7 +622,17 @@ CreateThread(function()
                             if speed > 0.9 then
                                 QBCore.Functions.Notify(Lang:t("info.stop_car"), 'error', 1500)
 							elseif IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) or IsThisModelAHeli(GetEntityModel(vehicle)) or IsThisModelAPlane(GetEntityModel(vehicle)) or IsThisModelABoat(GetEntityModel(vehicle)) then
-                                Save(player, vehicle)
+                               
+                                QBCore.Functions.TriggerCallback('qb-parking:server:allowtopark', function(cb)
+                                    if cb.status then
+                                        Save(player, vehicle)
+                                    else
+                                        if cb.message then
+                                            QBCore.Functions.Notify(cb.message, "error", 5000)
+                                        end
+                                    end
+                                end)
+
 							else
 								QBCore.Functions.Notify(Lang:t("info.only_cars_allowd"), "error", 5000)
 							end						
