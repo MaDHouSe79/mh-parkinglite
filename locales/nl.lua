@@ -9,6 +9,7 @@ local Translations = {
         ["max_allow_reached"]   = "Het maximale aantal bepakte voertuigen voor jouw is %{max}",
         ["park_or_drive"]       = "Park or Drive",
         ["parked_blip_info"]    = "Parked: %{modelname}",
+        ["to_far_from_vehicle"] = "You are to far from the vehicle",
     },
     success = {
         ["parked"]              = "Je auto is gepakeerd",
@@ -26,6 +27,9 @@ local Translations = {
         ["has_take_the_car"]    = "Jou voertuig is uit de pakeer zone gehaalt",
         ["only_cars_allowd"]    = "Je kunt hier alleen auto's parkeren",
         ["stop_car"]            = "Stop het voertuig voor dat je het wilt parkeren...",
+        ["drive"]               = "Drive Vecihle",
+        ["park"]                = "Park Vehicle",
+        ["limit_for_player"]    = "Je kunt maximaal %{amount} voertuig(en) op straat parkeren!",
     },
 }
 
