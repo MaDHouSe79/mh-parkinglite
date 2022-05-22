@@ -35,7 +35,7 @@ This is just how you park in real live 😁 so park anywhere you want 👊😁�
 ## 🍀 Features
 - ✅ Easy to install and use
 - ✅ QB-Phone notifications
-- ✅ Admin Controll like disable or enable the system or set it to only allowed for vip players only.
+- ✅ Admin Controll like disable or enable the system.
 - ✅ User Controll like displaying text on screen.
 - ✅ Players with user status will only see the model name of this vecihle, not the owners name or plate.
 - 👉 Your players will love this extra feature, if they can park there own vehicle in front of there housees or clubs. 
@@ -50,17 +50,9 @@ This is just how you park in real live 😁 so park anywhere you want 👊😁�
 - 👉 If you want to use the F5 button, you must add it to your /binds and add on F5 the word "park"
 
 
-## ⚙️ Settings
-- 👉 Change the max cars that can park in the world space, change the amount from Config.Maxcarparking in the config.lua file. 
-- 👉 Vip users can be added in shared/config.lua => Config.VipPlayers = {} only if you use the vip option.
-- 👉 Knowledge of programming and use your brains cause i'am not going to help you install this mod, cause it's very easy to do.
-
-
 ## 💯 What i recommend for using this mod
-- 👉 I recommend to use this mod only for vip players or for players who are most online on you server.
 - 👉 Try not to spawn too many vehicles in world space, this can cause issues and hiccups. 
 - 👉 It is also recommended to have a good computer/server to use this mod, cause you will need it.
-- 👉 To keep the server nice and clean for everyody, use this system only for vip players. 
 
 
 ## 💯 I tested this mod on a computer/server with the following settings
