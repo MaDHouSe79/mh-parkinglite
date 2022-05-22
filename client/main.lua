@@ -154,8 +154,11 @@ end
 -- Insert Data to table
 local function TableInsert(VehicleEntity, vehicleData)
     
-    local tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = vehicleData.modelname}), vehicleData.vehicle.location)
-    
+    local tmpBlip = nil
+    if vehicleData.citizenid == QBCore.Functions.GetPlayerData().citizenid then
+        tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = vehicleData.modelname}), vehicleData.vehicle.location)
+    end
+	
     LocalVehicles[#LocalVehicles+1] = {
 		entity      = VehicleEntity,
 		vehicle     = vehicleData.mods,
