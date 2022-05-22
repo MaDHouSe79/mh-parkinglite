@@ -25,6 +25,7 @@ Config.ResetState             = 1            -- 👉 1 is stored in garage, 2 is
 Config.UseParkingSystem       = true         -- 👉 Auto turn on when server is starting. (default true)
 Config.UseParkedVehicleNames  = true         -- 👉 Default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
 
+Config.UseParkingBlips           = true
 
 Config.UseMaxParkingOnServer     = true      -- 👉 if you want to limit the parking on the server
 Config.MaxServerParkedVehicles   = 25        -- 👉 max allowed to park on server
@@ -32,6 +33,8 @@ Config.MaxServerParkedVehicles   = 25        -- 👉 max allowed to park on serv
 Config.UseMaxParkingPerPlayer    = true      -- 👉 if you want to limit players with a amount of parking vehicles
 Config.MaxStreetParkingPerPlayer = 1         -- 👉 max allowed pakring vehivles per player
 
+Config.UseTargetEye              = true
+Config.InteractDistance          = 5.0
 -- 👇 change this to your own commands
 Config.Command = {
     park         = 'park',                   -- 👉 User/Admin permission
