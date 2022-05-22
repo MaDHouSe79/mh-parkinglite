@@ -26,6 +26,7 @@ local Translations = {
         ["has_take_the_car"]    = "Ditt kjøretøy er fjernet fra parkerings sonen",
         ["only_cars_allowd"]    = "Du kan bare parkere biler her",
         ["stop_car"]            = "Stopp kjøretøy før du parkerer",
+        ["limit_for_player"]    = "you can park %{amount} amount of vegicles on the street!",
     },
 }
 
