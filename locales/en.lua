@@ -26,6 +26,8 @@ local Translations = {
         ["has_take_the_car"]    = "Your vehicle has been removed from the parking zone",
         ["only_cars_allowd"]    = "You can only park cars here",
         ["stop_car"]            = "Stop your vehicle before you park",
+        ["drive"]               = "Drive Vecihle",
+        ["park"]                = "Park Vehicle",
         ["limit_for_player"]    = "you can park %{amount} amount of vegicles on the street!",
     },
 }
