@@ -31,7 +31,7 @@ Config.UseMaxParkingOnServer     = true      -- 👉 if you want to limit the pa
 Config.MaxServerParkedVehicles   = 25        -- 👉 max allowed to park on server
 
 Config.UseMaxParkingPerPlayer    = true      -- 👉 if you want to limit players with a amount of parking vehicles
-Config.MaxStreetParkingPerPlayer = 1         -- 👉 max allowed pakring vehivles per player
+Config.MaxStreetParkingPerPlayer = 1         -- 👉 max allowed parking vehicles per player
 
 Config.UseTargetEye              = true
 Config.InteractDistance          = 5.0
