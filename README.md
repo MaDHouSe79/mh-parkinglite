@@ -2,7 +2,11 @@
 This is a very awesome parking mod, that i specially made for [qb-core](https://github.com/qbcore-framework/qb-core) 
 This is just how you park in real live 😁 so park anywhere you want 👊😁👍
 
-## Read The Updates.md for updates and changes.
+## Read The README.md!!! 
+cause if you don't have keys after server restart, 
+you will find in in the readme what you must do to make it work.
+So please read it before run to me and ask why stuff does not work.... Thanks.
+
 
 ## 📸 Screenshot 👊😁👍
 ![foto1](https://www.madirc.nl/fivem/foto1.png)
