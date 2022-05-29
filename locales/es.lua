@@ -9,6 +9,11 @@ local Translations = {
         ["max_allow_reached"]   = "El número máximo de vehículos permitidos para usted es %{max}",
         ["park_or_drive"]       = "Estacionar o conducir",
         ["parked_blip_info"]    = "Parked: %{modelname}",
+        ["offline"]             = "Park System is offline",
+        ["vip_add"]             = "Player %{username} is added as vip!",
+        ["vip_remove"]          = "Player %{username} is removed as vip!",
+        ["no_permission"]       = "Park system: You do not have permission to park.",
+    	["already_vip"]         = "Player is already a vip!",
     },
     success = {
         ["parked"]              = "Tu vehiculo esta estacionado",
