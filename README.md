@@ -54,6 +54,8 @@ Thanks.
 - 👉 Typ "/park" to park or drive your vehicle where you are at that moment. (Users and Admins)
 - 👉 Typ "/park-names if you want to display the names ontop of the vehicle that is parked. (Users and Admins)
 - 👉 If you want to use the F5 button, you must add it to your /binds and add on F5 the word "park"
+- 👉 Typ "/park-addvip [id]" if you want to add a vip. (Admin Only)
+- 👉 Typ "/park-removevip [id]" if you want to remove a vip. (Admin Only)
 
 
 ## 💯 What i recommend for using this mod
