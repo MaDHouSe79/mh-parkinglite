@@ -9,7 +9,11 @@ local Translations = {
         ["max_allow_reached"]   = "Het maximale aantal bepakte voertuigen voor jouw is %{max}",
         ["park_or_drive"]       = "Park or Drive",
         ["parked_blip_info"]    = "Parked: %{modelname}",
-        ["to_far_from_vehicle"] = "You are to far from the vehicle",
+        ["offline"]             = "Park System is offline",
+        ["vip_add"]             = "Player %{username} is added as vip!",
+        ["vip_remove"]          = "Player %{username} is removed as vip!",
+        ["no_permission"]       = "Park system: You do not have permission to park.",
+    	["already_vip"]         = "Player is already a vip!",
     },
     success = {
         ["parked"]              = "Je auto is gepakeerd",
