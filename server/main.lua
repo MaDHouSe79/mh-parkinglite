@@ -262,9 +262,9 @@ QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(sou
 end)
 
 QBCore.Functions.CreateCallback('qb-parking:server:allowtopark', function(source, cb)
-	local server_allowed, player_allowed, allowed, text = false, false, false, nil
-	local Player       = QBCore.Functions.GetPlayer(source)
-	local citizenid    = Player.PlayerData.citizenid
+	local src, server_allowed, player_allowed, allowed, text = source, false, false, false, nil
+	local xPlayer = QBCore.Functions.GetPlayer(src)
+	local citizenid = xPlayer.PlayerData.citizenid
 	local server_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE state = 3')
 	local player_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE citizenid=? AND state = ?', {citizenid, 3})
 	if Config.UseMaxParkingOnServer then
@@ -293,6 +293,18 @@ QBCore.Functions.CreateCallback('qb-parking:server:allowtopark', function(source
 			else
 				text = Lang:t('info.limit_for_player')
 			end
+		else
+			if Config.UseForVipOnly then -- only allow for vip players
+				MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = ?", {citizenid}, function(rs)
+					if type(rs) == 'table' and rs[1] then
+						if rs[1].citizenid == citizenid then
+							player_allowed = true
+						else
+							text = Lang:t('system.no_permission')
+						end
+					end			
+				end)
+			end
 		end
 		if player_allowed then
 			allowed = true
@@ -304,6 +316,7 @@ QBCore.Functions.CreateCallback('qb-parking:server:allowtopark', function(source
 		message = text
 	})
 end)
+
 
 
 -- Reset state and counting to stay in sync.
