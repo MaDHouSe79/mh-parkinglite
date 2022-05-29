@@ -14,6 +14,7 @@ local Translations = {
         ["vip_remove"]          = "Player %{username} is removed as vip!",
         ["no_permission"]       = "Park system: You do not have permission to park.",
     	["already_vip"]         = "Player is already a vip!",
+        ["vip_not_found"]       = "Player not found!",
     },
     success = {
         ["parked"]              = "Je auto is gepakeerd",
