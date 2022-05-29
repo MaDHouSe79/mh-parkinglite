@@ -348,3 +348,38 @@ end)
 RegisterServerEvent('qb-parking:server:refreshVehicles', function(parkingName)
     RefreshVehicles(source)
 end)
+
+QBCore.Commands.Add(Config.Command.addvip, Lang:t("commands.addvip"), {{name='ID', help='The id of the player you want to add.'}}, true, function(source, args)
+	if args[1] and tonumber(args[1]) > 0 then
+		MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
+			['@citizenid'] = GetCitizenid(QBCore.Functions.GetPlayer(tonumber(args[1]))),
+		}, function(rs)
+			if type(rs) == 'table' and #rs > 0 then
+				TriggerClientEvent('QBCore:Notify', source, Lang:t('system.already_vip'), "error")
+			else
+				MySQL.Async.execute("INSERT INTO player_parking_vips (citizenid, citizenname) VALUES (@citizenid, @citizenname)", {
+					["@citizenid"]   = GetCitizenid(QBCore.Functions.GetPlayer(tonumber(args[1]))),
+					["@citizenname"] = GetUsername(QBCore.Functions.GetPlayer(tonumber(args[1])))
+				})
+				TriggerClientEvent('QBCore:Notify', source, Lang:t('system.vip_add', {username = GetUsername(QBCore.Functions.GetPlayer(tonumber(args[1])))}), "success")
+			end
+		end)
+	end
+end, 'admin')
+
+QBCore.Commands.Add(Config.Command.removevip, Lang:t("commands.removevip"), {{name='ID', help='The id of the player you want to remove.'}}, true, function(source, args)
+	if args[1] and tonumber(args[1]) > 0 then
+		MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = @citizenid", {
+			['@citizenid'] = GetCitizenid(QBCore.Functions.GetPlayer(tonumber(args[1]))),
+		}, function(rs)
+			if type(rs) == 'table' and #rs > 0 then
+				MySQL.Async.execute('DELETE FROM player_parking_vips WHERE citizenid = @citizenid', {
+					["@citizenid"] = GetCitizenid(QBCore.Functions.GetPlayer(tonumber(args[1]))),
+				})
+				TriggerClientEvent('QBCore:Notify', source, Lang:t('system.vip_remove', {username = GetUsername(QBCore.Functions.GetPlayer(tonumber(args[1])))}), "success")
+			else
+				TriggerClientEvent('QBCore:Notify', source, Lang:t('system.vip_not_found'), "error")
+			end
+		end)
+	end
+end, 'admin')
