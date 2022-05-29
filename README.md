@@ -7,6 +7,20 @@ cause if you don't have keys after server restart,
 you will find this in the readme file what you must do to make it work.
 So please read it before run to me and ask why stuff does not work.... 
 
+
+
+## NOTE HOW TO USE THE VIP OR THE LIMITER
+- Use VIP only
+- Config.UseMaxParkingOnServer to false
+- Config.UseMaxParkingPerPlayer to false
+- Config.UseForVipOnly to true
+- 
+- Use Server and player limiter
+- Config.UseMaxParkingOnServer to true
+- Config.UseMaxParkingPerPlayer to true
+- Config.UseForVipOnly to false
+
+
 Thanks.
 
 
