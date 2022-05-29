@@ -34,10 +34,13 @@ Config.MaxStreetParkingPerPlayer = 1          -- 👉 max allowed parking vehicl
 Config.UseTargetEye              = true
 Config.InteractDistance          = 5.0
 
+Config.UseForVipOnly             = false
 -- 👇 change this to your own commands
 Config.Command = {
     park         = 'park',                    -- 👉 User/Admin permission
     parknames    = 'park-names',              -- 👉 User/Admin permission
+    addvip       = 'park-addvip',             -- 👉 Admin permission
+    removevip    = 'park-removevip',          -- 👉 Admin permission
 }
 
 -- 👇 Dont change this, you will not be able to park if you change this...
