@@ -20,8 +20,6 @@ local Translations = {
     	["already_vip"]         = "Player is already a vip!",
         ["vip_not_found"]       = "Player not found!",
     },
-
-    },
     success = {
         ["parked"]              = "Your car is packed",
         ["route_has_been_set"]  = "Er is een waypoint op de map geplaatst waar jou voertuig is gepakeerd.",
