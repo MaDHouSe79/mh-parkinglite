@@ -4,6 +4,10 @@ local Translations = {
         ["mis_id"]              = "[Error] En spiller ID er påkrevd.",
         ["mis_amount"]          = "[Error] There is no number of vehicles that this player can park.",
     },
+    commands = {
+        ["addvip"]              = "Add", 
+        ["removevip"]           = "Remove", 
+    },
     system = {
         ["update_needed"]       = "Park System er utdatert....",
         ["max_allow_reached"]   = "Du har parkert maks antall kjøretøy du kan parkere %{max}",
