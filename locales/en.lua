@@ -4,6 +4,10 @@ local Translations = {
         ["mis_id"]              = "[Error] A player ID is required.",
         ["mis_amount"]          = "[Error] There is no number of vehicles that this player can park.",
     },
+    commands = {
+        ["addvip"]              = "Add", 
+        ["removevip"]           = "Remove", 
+    },
     system = {
         ["update_needed"]       = "Park Systeem is verouderd....",
         ["max_allow_reached"]   = "The maximum number of packed vehicles for you is %{max}",
