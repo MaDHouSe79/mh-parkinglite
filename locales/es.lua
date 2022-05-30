@@ -4,6 +4,10 @@ local Translations = {
         ["mis_id"]              = "[Error] Se requiere una identificación de jugador.",
         ["mis_amount"]          = "[Error] No hay una cantidad de vehículos que este jugador pueda estacionar con anticipación.",
     },
+    commands = {
+        ["addvip"]              = "Add", 
+        ["removevip"]           = "Remove", 
+    },
     system = {
         ["update_needed"]       = "El sistema de parking está desactualizado....",
         ["max_allow_reached"]   = "El número máximo de vehículos permitidos para usted es %{max}",
