@@ -4,6 +4,10 @@ local Translations = {
         ["mis_id"]              = "[Error] Er is een speler id nodig.",
         ["mis_amount"]          = "[Error] Er is geen aantal voertuigen dat deze speler kan parkeren ingevored.",
     },
+    commands = {
+        ["addvip"]              = "Add", 
+        ["removevip"]           = "Remove", 
+    },
     system = {
         ["update_needed"]       = "Park Systeem is verouderd....",
         ["max_allow_reached"]   = "Het maximale aantal bepakte voertuigen voor jouw is %{max}",
