@@ -2,6 +2,19 @@ local QBCore      = exports['qb-core']:GetCoreObject()
 local updateavail = false
 
 -------------------------------------------Local Function----------------------------------------
+
+-- get player information
+local function GetPlayerInfo(Player)
+	local info = {}
+	info.source    = Player.source
+	info.citizenid = Player.PlayerData.citizenid
+	info.username  = Player.PlayerData.name
+	info.firstname = Player.PlayerData.charinfo.firstname
+	info.lastname  = Player.PlayerData.charinfo.lastname
+	info.fullname  = Player.PlayerData.charinfo.firstname ..' '.. Player.PlayerData.charinfo.lastname
+	return info
+end
+
 -- Get Player username
 local function GetUsername(player)
 	local tmpName = player.PlayerData.name
@@ -264,9 +277,9 @@ end)
 
 QBCore.Functions.CreateCallback('qb-parking:server:allowtopark', function(source, cb)
 	local server_allowed, player_allowed, allowed, text = false, false, false, nil
-	local citizenid = GetCitizenid(QBCore.Functions.GetPlayer(source))
+	local player = GetPlayerInfo(QBCore.Functions.GetPlayer(source))
 	local server_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE state = ?', {3})
-	local player_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE citizenid = ? AND state = ?', {citizenid, 3})
+	local player_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE citizenid = ? AND state = ?', {player.citizenid, 3})
 	if Config.UseMaxParkingOnServer then -- is server limiter is true
 		if server_total < Config.MaxServerParkedVehicles then -- if total server parked vehicles is lower then Config value
 			server_allowed = true -- set server allow to park
@@ -295,17 +308,13 @@ QBCore.Functions.CreateCallback('qb-parking:server:allowtopark', function(source
 			end
 		else
 			if Config.UseForVipOnly then -- only allow for vip players
-				MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = ?", {citizenid}, function(rs)
-					if type(rs) == 'table' and rs[1] then
-						if rs[1].citizenid == citizenid then -- if this id is the same it's a vip user
-							player_allowed = true -- set player allow to park 
-						else
-							text = Lang:t('system.no_permission')
-						end
-					else
-						player_allowed = false
-					end	
-				end)
+				local isVip = MySQL.Sync.fetchScalar('SELECT * FROM player_parking_vips WHERE citizenid = ?', {player.citizenid})
+				if isVip and isVip >= 1 then
+					player_allowed = true -- set player allow to park 	
+				else
+					player_allowed = false
+					text = Lang:t('system.no_permission')
+				end	
 			end
 		end
 		if player_allowed then
