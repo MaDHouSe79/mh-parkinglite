@@ -263,7 +263,7 @@ QBCore.Functions.CreateCallback('qb-parking:server:allowtopark', function(source
 	local player = GetPlayerInfo(QBCore.Functions.GetPlayer(source))
 	local server_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE state = ?', {3})
 	local player_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE citizenid = ? AND state = ?', {player.citizenid, 3})
-	if Config.UseMaxParkingOnServer then -- is server limiter is true
+	if Config.UseMaxParkingOnServer then -- if server limiter is true
 		if server_total < Config.MaxServerParkedVehicles then -- if total server parked vehicles is lower then Config value
 			server_allowed = true -- set server allow to park
 		else
@@ -282,9 +282,9 @@ QBCore.Functions.CreateCallback('qb-parking:server:allowtopark', function(source
 				text = nil -- remove text
 			end
 		end
-	else -- id the server has not limiter
+	else -- if the server has not limiter
 		if Config.UseMaxParkingPerPlayer then -- but if a player has a park limiter 
-			if player_total < Config.MaxStreetParkingPerPlayer then -- is the total parking is lower then the config value
+			if player_total < Config.MaxStreetParkingPerPlayer then -- if the total parking is lower then the config value
 				player_allowed = true -- set player allow to park
 			else
 				text = Lang:t('info.limit_for_player', {amount = Config.MaxStreetParkingPerPlayer})
