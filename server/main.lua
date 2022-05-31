@@ -261,48 +261,50 @@ QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(sou
     end)
 end)
 
+
 QBCore.Functions.CreateCallback('qb-parking:server:allowtopark', function(source, cb)
-	local src, server_allowed, player_allowed, allowed, text = source, false, false, false, nil
-	local xPlayer = QBCore.Functions.GetPlayer(src)
-	local citizenid = xPlayer.PlayerData.citizenid
-	local server_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE state = 3')
-	local player_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE citizenid=? AND state = ?', {citizenid, 3})
-	if Config.UseMaxParkingOnServer then
-		if server_total < Config.MaxServerParkedVehicles then
-			server_allowed = true
+	local server_allowed, player_allowed, allowed, text false, false, false, nil
+	local citizenid = GetCitizenid(QBCore.Functions.GetPlayer(source))
+	local server_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE state = ?', {3})
+	local player_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE citizenid = ? AND state = ?', {citizenid, 3})
+	if Config.UseMaxParkingOnServer then -- is server limiter is true
+		if server_total < Config.MaxServerParkedVehicles then -- if total server parked vehicles is lower then Config value
+			server_allowed = true -- set server allow to park
 		else
 			text = Lang:t('info.maximum_cars', {amount = Config.MaxServerParkedVehicles})
 		end
-		if server_allowed and Config.UseMaxParkingPerPlayer then
-			if player_total < Config.MaxStreetParkingPerPlayer then
-				player_allowed = true
+		if server_allowed and Config.UseMaxParkingPerPlayer then -- if server is allowd to park and player parking limiter is true
+			if player_total < Config.MaxStreetParkingPerPlayer then -- if the total parking is lower then the config value
+				player_allowed = true -- set player allow to park
 			else
 				text = Lang:t('info.limit_for_player', {amount = Config.MaxStreetParkingPerPlayer})
 			end
 		end
-		if server_allowed then
-			if player_allowed then
-				allowed = true
-				text = nil
+		if server_allowed then -- if true 
+			if player_allowed then -- if true
+				allowed = true -- set allow to park
+				text = nil -- remove text
 			end
 		end
-	else
-		if Config.UseMaxParkingPerPlayer then
-			if player_total < Config.MaxStreetParkingPerPlayer then
-				player_allowed = true
+	else -- id the server has not limiter
+		if Config.UseMaxParkingPerPlayer then -- but if a player has a park limiter 
+			if player_total < Config.MaxStreetParkingPerPlayer then -- is the total parking is lower then the config value
+				player_allowed = true -- set player allow to park
 			else
-				text = Lang:t('info.limit_for_player')
+				text = Lang:t('info.limit_for_player', {amount = Config.MaxStreetParkingPerPlayer})
 			end
 		else
 			if Config.UseForVipOnly then -- only allow for vip players
 				MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = ?", {citizenid}, function(rs)
 					if type(rs) == 'table' and rs[1] then
-						if rs[1].citizenid == citizenid then
-							player_allowed = true
+						if rs[1].citizenid == citizenid then -- if this id is the same it's a vip user
+							player_allowed = true -- set player allow to park 
 						else
 							text = Lang:t('system.no_permission')
 						end
-					end			
+					else
+						player_allowed = false
+					end	
 				end)
 			end
 		end
