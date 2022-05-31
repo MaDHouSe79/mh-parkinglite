@@ -195,7 +195,7 @@ end
 
 --Display Parked Owner Text
 local function DisplayParkedOwnerText()
-    if UseParkedVehicleNames then -- for performes
+    if Config.UseParkedVehicleNames then -- for performes
 		local pl = GetEntityCoords(PlayerPedId())
 		local displayWhoOwnesThisCar = nil
 		for k, vehicle in pairs(LocalVehicles) do
@@ -527,11 +527,11 @@ RegisterCommand(Config.Command.park, function()
 end, false)
 
 RegisterCommand(Config.Command.parknames, function()
-    HideParkedVehicleNames = not HideParkedVehicleNames
-    if HideParkedVehicleNames then
+    Config.UseParkedVehicleNames = not Config.UseParkedVehicleNames
+    if Config.UseParkedVehicleNames then
         QBCore.Functions.Notify(Lang:t('system.enable', {type = "names"}), "success", 1500)
     end
-    if not HideParkedVehicleNames then
+    if not Config.UseParkedVehicleNames then
         QBCore.Functions.Notify(Lang:t('system.disable', {type = "names"}), "error", 1500)
     end
 end, false)
@@ -593,13 +593,6 @@ RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location
     QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success')
 end)
 
-RegisterNetEvent("qb-parking:client:GetUpdate", function(state)
-    UpdateAvailable = state
-    if UpdateAvailable then
-        print("There is a update for qb-parking")
-    end
-end)
-
 
 -------------------------------------------------Thread-------------------------------------------------
 CreateThread(function()
@@ -652,7 +645,7 @@ end)
 
 
 CreateThread(function()
-    if UseParkingSystem then
+    if Config.UseParkingSystem then
 		while true do
 			local player = PlayerPedId()
 			if InParking and IsPedInAnyVehicle(player) then
@@ -700,7 +693,7 @@ CreateThread(function()
 end)
 
 CreateThread(function()
-    if UseParkingSystem and not HideParkedVehicleNames then
+    if Config.UseParkingSystem then
         while true do
             DisplayParkedOwnerText()
             Wait(0)
