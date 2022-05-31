@@ -263,7 +263,7 @@ end)
 
 
 QBCore.Functions.CreateCallback('qb-parking:server:allowtopark', function(source, cb)
-	local server_allowed, player_allowed, allowed, text false, false, false, nil
+	local server_allowed, player_allowed, allowed, text = false, false, false, nil
 	local citizenid = GetCitizenid(QBCore.Functions.GetPlayer(source))
 	local server_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE state = ?', {3})
 	local player_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE citizenid = ? AND state = ?', {citizenid, 3})
