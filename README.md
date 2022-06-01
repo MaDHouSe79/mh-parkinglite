@@ -3,6 +3,7 @@ This is a very awesome parking mod, that i specially made for [qb-core](https://
 This is just how you park in real live 😁 so park anywhere you want 👊😁👍
 
 ## Read The README.md!!! 
+![foto1](https://naskho.org/images/ReadPlease.gif)
 cause if you don't have keys after server restart, 
 you will find this in the readme file what you must do to make it work.
 So please read it before run to me and ask why stuff does not work.... 
@@ -22,7 +23,6 @@ So please read it before run to me and ask why stuff does not work....
 
 
 Thanks.
-
 
 ## 📸 Screenshot 👊😁👍
 ![foto1](https://www.madirc.nl/fivem/foto1.png)
