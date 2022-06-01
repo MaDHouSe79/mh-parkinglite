@@ -137,6 +137,7 @@ end)
 - ✅ Place the line below at the bottom in playertables (there are more insite), so place this one at the bottom.
 ````lua
 { table = 'player_parking' },
+{ table = 'player_parking_vips' },
 ````
 
 
