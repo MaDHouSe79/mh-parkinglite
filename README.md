@@ -89,7 +89,7 @@ Thanks.
 - 👉 use the recommended parking spots in the world like you do in real life,
 - 👉 you can do of course just park at your own house on a parking spot to keep it nice and clean for everyone.
 
-
+![foto1](https://naskho.org/images/ReadPlease.gif)
 ## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/client/main.lua.
 ````lua
 RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
