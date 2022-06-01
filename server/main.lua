@@ -103,6 +103,26 @@ local function RemoveVip(source, id)
 	end)
 end
 
+local function checkVersion(err, responseText, headers)
+    curVersion = LoadResourceFile(GetCurrentResourceName(), "version")
+    if responseText == nil then
+        print("^1"..resourceName.." check for updates failed ^7")
+        return
+    end
+    if curVersion ~= responseText and tonumber(curVersion) < tonumber(responseText) then
+        updateavail = true
+        print("\n^1----------------------------------------------------------------------------------^7")
+        print(resourceName.." is outdated, latest version is: ^2"..responseText.."^7, installed version: ^1"..curVersion.."^7!\nupdate from https://github.com"..updatePath.."")
+        print("^1----------------------------------------------------------------------------------^7")
+    elseif tonumber(curVersion) > tonumber(responseText) then
+        print("\n^3----------------------------------------------------------------------------------^7")
+        print(resourceName.." git version is: ^2"..responseText.."^7, installed version: ^1"..curVersion.."^7!")
+        print("^3----------------------------------------------------------------------------------^7")
+    else
+        print("\n"..resourceName.." is up to date. (^2"..curVersion.."^7)")
+    end
+end
+
 -- Add Vip Command
 QBCore.Commands.Add(Config.Command.addvip, Lang:t("commands.addvip"), {{name='ID', help='The id of the player you want to add.'}}, true, function(source, args)
 	if args[1] and tonumber(args[1]) > 0 then
@@ -254,30 +274,6 @@ AddEventHandler('onResourceStart', function(resource)
     end
 end)
 
--- Refresh vehicles.
-RegisterServerEvent('qb-parking:server:refreshVehicles', function(parkingName) RefreshVehicles(source) end)
-
-
-local function checkVersion(err, responseText, headers)
-    curVersion = LoadResourceFile(GetCurrentResourceName(), "version")
-    if responseText == nil then
-        print("^1"..resourceName.." check for updates failed ^7")
-        return
-    end
-    if curVersion ~= responseText and tonumber(curVersion) < tonumber(responseText) then
-        updateavail = true
-        print("\n^1----------------------------------------------------------------------------------^7")
-        print(resourceName.." is outdated, latest version is: ^2"..responseText.."^7, installed version: ^1"..curVersion.."^7!\nupdate from https://github.com"..updatePath.."")
-        print("^1----------------------------------------------------------------------------------^7")
-    elseif tonumber(curVersion) > tonumber(responseText) then
-        print("\n^3----------------------------------------------------------------------------------^7")
-        print(resourceName.." git version is: ^2"..responseText.."^7, installed version: ^1"..curVersion.."^7!")
-        print("^3----------------------------------------------------------------------------------^7")
-    else
-        print("\n"..resourceName.." is up to date. (^2"..curVersion.."^7)")
-    end
-end
-
 if Config.CheckForUpdates then
     Citizen.CreateThread( function()
         updatePath = "/MaDHouSe79/qb-parkinglite"
@@ -285,3 +281,6 @@ if Config.CheckForUpdates then
         PerformHttpRequest("https://raw.githubusercontent.com"..updatePath.."/master/version", checkVersion, "GET")
     end)
 end
+
+-- Refresh vehicles.
+RegisterServerEvent('qb-parking:server:refreshVehicles', function(parkingName) RefreshVehicles(source) end)
