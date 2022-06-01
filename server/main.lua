@@ -36,12 +36,6 @@ local function FindPlayerBoats(citizenid, cb)
     end)
 end
 
--- Get the number of the vehicles.
-local function GetVehicleNumOfParking()
-    local rs = MySQL.Async.fetchAll('SELECT id FROM player_parking', {})
-    if type(rs) == 'table' then return #rs else return 0 end
-end
-
 -- Refresh client local vehicles entities.
 local function RefreshVehicles(src)
     if src == nil then src = -1 end
@@ -78,7 +72,7 @@ local function DeleteParkedVehicle(citizenid, plate)
 end
 
 -- Add Vip
-local function AddVip(source, id, player)
+local function AddVip(source, id)
 	local player = GetPlayerInfo(QBCore.Functions.GetPlayer(id))
 	MySQL.Async.fetchAll("SELECT * FROM player_parking_vips WHERE citizenid = ?", {player.citizenid}, function(rs)
 		if type(rs) == 'table' and #rs > 0 then
@@ -127,7 +121,7 @@ end
 QBCore.Commands.Add(Config.Command.addvip, Lang:t("commands.addvip"), {{name='ID', help='The id of the player you want to add.'}}, true, function(source, args)
 	if args[1] and tonumber(args[1]) > 0 then
 		local id = tonumber(args[1])
-		if id > 0 then AddVip(source, id, player) end
+		if id > 0 then AddVip(source, id) end
 	end
 end, 'admin')
 
