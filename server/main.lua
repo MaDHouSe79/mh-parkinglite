@@ -97,6 +97,7 @@ local function RemoveVip(source, id)
 	end)
 end
 
+-- Version check
 local function checkVersion(err, responseText, headers)
     curVersion = LoadResourceFile(GetCurrentResourceName(), "version")
     if responseText == nil then
@@ -268,6 +269,7 @@ AddEventHandler('onResourceStart', function(resource)
     end
 end)
 
+-- Version check
 if Config.CheckForUpdates then
     Citizen.CreateThread( function()
         updatePath = "/MaDHouSe79/qb-parkinglite"
