@@ -25,6 +25,8 @@ end
 local function doCarDamage(vehicle, health)
     local engine = health.engine + 0.0
     local body = health.body + 0.0
+    if body >= 900.0 then body = 1000.0 end
+    if engine >= 900.0 then engine = 1000.0 end
     Wait(100)
     if body < 900.0 then
 	SmashVehicleWindow(vehicle, 0)
