@@ -114,28 +114,30 @@ local function LoadEntity(vehicleData, type)
 end
 
 -- Insert Data to table
-local function TableInsert(VehicleEntity, vehicleData)
+local function TableInsert(entity, data)
     local tmpBlip = nil
-    if vehicleData.citizenid == PlayerData.citizenid then
-        tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = vehicleData.model}), vehicleData.vehicle.location)
-    end
+    QBCore.Functions.TriggerCallback('qb-garage:server:checkVehicleOwner', function(owned)
+        if owned then
+            tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = data.model}), data.vehicle.location)
+        end
+    end, data.plate)
     LocalVehicles[#LocalVehicles+1] = {
-	entity      = VehicleEntity,
-	vehicle     = vehicleData.mods,
-	plate       = vehicleData.plate,
-        fuel        = vehicleData.fuel,
-	citizenid   = vehicleData.citizenid,
-	citizenname = vehicleData.citizenname,
-	livery      = vehicleData.vehicle.livery,
-	health      = vehicleData.vehicle.health,
-	model       = vehicleData.model,
+	entity      = entity,
+	vehicle     = data.mods,
+	plate       = data.plate,
+        fuel        = data.fuel,
+	citizenid   = data.citizenid,
+	citizenname = data.citizenname,
+	livery      = data.vehicle.livery,
+	health      = data.vehicle.health,
+	model       = data.model,
         blip        = tmpBlip,
         isGrounded  = false,
 	location    = {
-	     x = vehicleData.vehicle.location.x,
-	     y = vehicleData.vehicle.location.y,
-	     z = vehicleData.vehicle.location.z + 0.5,
-	     w = vehicleData.vehicle.location.w
+	    x = data.vehicle.location.x,
+	    y = data.vehicle.location.y,
+	    z = data.vehicle.location.z + 0.5,
+	    w = data.vehicle.location.w
 	}
     }
 end
