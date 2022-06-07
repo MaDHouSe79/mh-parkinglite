@@ -278,14 +278,19 @@ AddEventHandler('onResourceStart', function(resource)
 		end)
 		Wait(2000)
 		print("[qb-parking] - lost parked vehicles garage check reset.")
-		MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE garage = NULL", {}, function(vehicles)
+		local errorpark = 0
+		MySQL.Async.fetchAll("SELECT * FROM player_vehicles", {}, function(vehicles)
 			if type(vehicles) == 'table' and #vehicles > 0 then
 				for _, vehicle in pairs(vehicles) do
-					MySQL.Async.execute('UPDATE player_vehicles SET state = ?, garage = ?', {Config.ResetState, 'pillboxgarage'})					
+					if vehicle.garage == nil then
+						MySQL.Async.execute('UPDATE player_vehicles SET state = ?, garage = ?', {1, 'pillboxgarage'})
+						errorpark = errorpark + 1
+										
+					end
 				end
 			end
 		end)
-
+		print(errorpark)
     end
 end)
 
