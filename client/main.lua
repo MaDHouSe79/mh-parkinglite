@@ -439,7 +439,7 @@ local function Save(player, vehicle, warp)
     local vehicleProps = QBCore.Functions.GetVehicleProperties(vehicle)
     local displaytext  = GetDisplayNameFromVehicleModel(vehicleProps["model"])
     local carModelName = GetLabelText(displaytext)
-    local carmodel     = QBShared.Vehicles[displaytext]['model']
+    local carmodel     = QBCore.Shared.Vehicles[displaytext]['model']
     action             = 'park'
     LastUsedPlate      = vehicleProps.plate
     QBCore.Functions.TriggerCallback("qb-parking:server:save", function(callback)
