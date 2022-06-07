@@ -7,7 +7,9 @@ This is just how you park in real live 😁 so park anywhere you want 👊😁�
 ![foto1](https://naskho.org/images/ReadPlease.gif)
 
 cause if you don't have keys after server restart, 
+
 you will find this in the readme file what you must do to make it work.
+
 So please read it before run to me and ask why stuff does not work.... 
 
 
