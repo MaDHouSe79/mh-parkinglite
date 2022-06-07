@@ -1,5 +1,6 @@
 ## QB-Parking (Lite Version) inc VIP OR LIMITER Options
-This is a very awesome parking mod, that i specially made for [qb-core](https://github.com/qbcore-framework/qb-core) 
+This is a very awesome parking mod, that i specially made for [qb-core](https://github.com/qbcore-framework/qb-core)
+
 This is just how you park in real live 😁 so park anywhere you want 👊😁👍
 
 ## Read The README.md!!! 
