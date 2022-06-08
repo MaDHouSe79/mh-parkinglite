@@ -114,27 +114,35 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, d
         local src = source
         local player = GetPlayerInfo(QBCore.Functions.GetPlayer(src))
         local isFound = false
+        local model = nil
         FindPlayerVehicles(player.citizenid, function(vehicles) -- free for all
             for k, v in pairs(vehicles) do
-                if type(v.plate) and data.plate == v.plate then isFound = true end		
+                if type(v.plate) and data.plate == v.plate then 
+                    model = v.model
+                    isFound = true 
+                end		
             end
             if isFound then
                 MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ? AND plate = ?", {player.citizenid, data.plate}, function(rs)
                     if type(rs) == 'table' and #rs > 0 then
                         cb({status = false, message = Lang:t("info.car_already_parked")})
                     else
+                        data.model = model
                         SaveData(player, data)
                         cb({status = true, message = Lang:t("success.parked")})
                     end
                 end)	
             else 
                 FindPlayerBoats(player.citizenid, function(boats) 
+                    model = nil
                     for k, v in pairs(boats) do
                         if type(v.plate) and data.plate == v.plate then
+                            model = v.model
                             isFound = true
                         end		
                     end
                     if isFound then
+                        data.model = model
                         SaveData(player, data)
                         cb({status = true, message = Lang:t("success.parked")})
                     else
