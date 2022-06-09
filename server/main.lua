@@ -73,7 +73,7 @@ QBCore.Commands.Add(Config.Command.parknames, "Toogle vehicle names", {}, false,
     TriggerClientEvent('qb-parking:client:toggleParkNames', source)
 end)
 
-QBCore.Commands.Add('park-enable-parknames', "Toogle vehicle names", {}, false, function(source)
+QBCore.Commands.Add(Config.Command.toggleparknames, Lang:t("commands.togglenames"), {}, false, function(source)
     TriggerClientEvent('qb-parking:client:toggleParkNames', -1)
 end, 'admin')
 
