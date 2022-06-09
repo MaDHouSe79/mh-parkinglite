@@ -6,7 +6,8 @@ local Translations = {
     },
     commands = {
         ["addvip"]              = "Add", 
-        ["removevip"]           = "Remove", 
+        ["removevip"]           = "Remove",
+        ["togglenames"]         = "Toogle voertuignamen",
     },
     system = {
         ["update_needed"]       = "Park Systeem is verouderd....",
