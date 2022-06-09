@@ -37,10 +37,11 @@ Config.InteractDistance          = 5.0
 Config.UseForVipOnly             = false
 -- 👇 change this to your own commands
 Config.Command = {
-    park         = 'park',                    -- 👉 User/Admin permission
-    parknames    = 'park-names',              -- 👉 User/Admin permission
-    addvip       = 'park-addvip',             -- 👉 Admin permission
-    removevip    = 'park-removevip',          -- 👉 Admin permission
+    park            = 'park',                    -- 👉 User/Admin permission
+    parknames       = 'park-names',              -- 👉 User/Admin permission
+    addvip          = 'park-addvip',             -- 👉 Admin permission
+    removevip       = 'park-removevip',          -- 👉 Admin permission
+    toggleparknames = 'park-enable-parknames'    -- 👉 Admin permission
 }
 
 -- 👇 Dont change this, you will not be able to park if you change this...
