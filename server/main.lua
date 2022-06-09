@@ -193,7 +193,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
                     end
                 end)				
             end
-        end
+        end)
     else 
         cb({status = false, message = Lang:t("system.offline")})
     end
