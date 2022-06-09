@@ -27,9 +27,12 @@ end)
 
 local function CreateParkDisPlay(vehicleData)
     local info, model, owner, plate = nil
+    local name = vehicleData.model
+    if QBCore.Shared.Vehicles[vehicleData.model] then
+	name = QBCore.Shared.Vehicles[vehicleData.model]['name']
+    end
     if Config.UseOwnerNames then owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n' end
-    --local carmodel = QBCore.Shared.Vehicles[vehicleData.model]['name']
-    model = string.format(Lang:t("info.model", {model = vehicleData.model}))..'\n'
+    model = string.format(Lang:t("info.model", {model = name}))..'\n'
     plate = string.format(Lang:t("info.plate", {plate = vehicleData.plate}))..'\n'
     if Config.UseOwnerNames then info  = string.format("%s", model..plate..owner) else info  = string.format("%s", model..plate) end    
     return info
