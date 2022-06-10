@@ -2,7 +2,7 @@ Config                           = {}
 
 -- 👇 Sometime the vehicle spawn on top of each other and to avoid this you can use this delay below.
 Config.UseSpawnDelay             = true       -- 👉 Default false, if your vehicles spawn on top of each other, set this to true
-Config.DeleteDelay               = 1500       -- 👉 Default 500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
+Config.DeleteDelay               = 500        -- 👉 Default 500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
 Config.FreezeDelay               = 50         -- 👉 Default 10, a sort delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
 
 Config.CheckForUpdates           = true       -- 👉 If you want to stay updated keep it on true.
@@ -15,7 +15,8 @@ Config.useRoleplayName           = true       -- 👉 If you want to use Rolepla
 Config.UseStopSpeedForPark       = true       -- 👉 Default true
 Config.MinSpeedToPark            = 1          -- 👉 Default 1 the min speed to park
 
--- 👇 Default 2, this reset the state of the vehicles, to check if the vehicle is still parked outside, if not it will reset the state      
+-- 👇 Default 2, this reset the state of the vehicles, to check if the vehicle is still parked outside, if not it will reset the state   
+Config.ForceGroundenInMilSec     = 1000   
 Config.PlaceOnGroundRadius       = 100.0      -- 👉 lower wil limit the distance of placeing vehicles on the ground.
 Config.ResetState                = 1          -- 👉 1 is stored in garage, 2 is police impound. 
 
@@ -25,16 +26,15 @@ Config.UseParkedVehicleNames     = true       -- 👉 Default is false, if you w
 Config.UseOwnerNames             = true
 Config.UseParkingBlips           = true
 
+
 Config.UseMaxParkingOnServer     = true       -- 👉 if you want to limit the parking on the server
 Config.MaxServerParkedVehicles   = 15         -- 👉 max allowed to park on server
 
 Config.UseMaxParkingPerPlayer    = true       -- 👉 if you want to limit players with a amount of parking vehicles
 Config.MaxStreetParkingPerPlayer = 1          -- 👉 max allowed parking vehicles per player
 
-Config.UseTargetEye              = GetConvar('UseTarget', 'false') == 'true' -- Use qb-target interactions (don't change this, go to your server.cfg and add `setr UseTarget true` to use this and just that from true to false or the other way around)
-Config.InteractDistance          = 5.0
-
 Config.UseForVipOnly             = false
+
 -- 👇 change this to your own commands
 Config.Command = {
     park            = 'park',                    -- 👉 User/Admin permission
