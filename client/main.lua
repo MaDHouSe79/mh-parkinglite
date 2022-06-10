@@ -47,31 +47,31 @@ local function doCarDamage(vehicle, health)
         SmashVehicleWindow(vehicle, 2)
         SmashVehicleWindow(vehicle, 3)
         SmashVehicleWindow(vehicle, 4)
-		SmashVehicleWindow(vehicle, 5)
-		SmashVehicleWindow(vehicle, 6)
-		SmashVehicleWindow(vehicle, 7)
-	end
-	if body < 700.0 then
-		SetVehicleDoorBroken(vehicle, 0, true)
-		SetVehicleDoorBroken(vehicle, 1, true)
-		SetVehicleDoorBroken(vehicle, 2, true)
-		SetVehicleDoorBroken(vehicle, 3, true)
-		SetVehicleDoorBroken(vehicle, 4, true)
-		SetVehicleDoorBroken(vehicle, 5, true)
-		SetVehicleDoorBroken(vehicle, 6, true)
-	end
-	if engine < 600.0 then
-		SetVehicleTyreBurst(vehicle, 1, false, 990.0)
-		SetVehicleTyreBurst(vehicle, 2, false, 990.0)
-		SetVehicleTyreBurst(vehicle, 3, false, 990.0)
-		SetVehicleTyreBurst(vehicle, 4, false, 990.0)
-	end
-	if engine < 400.0 then
-		SetVehicleTyreBurst(vehicle, 0, false, 990.0)
-		SetVehicleTyreBurst(vehicle, 5, false, 990.0)
-		SetVehicleTyreBurst(vehicle, 6, false, 990.0)
-		SetVehicleTyreBurst(vehicle, 7, false, 990.0)
-	end
+	SmashVehicleWindow(vehicle, 5)
+	SmashVehicleWindow(vehicle, 6)
+	SmashVehicleWindow(vehicle, 7)
+    end
+    if body < 700.0 then
+	SetVehicleDoorBroken(vehicle, 0, true)
+	SetVehicleDoorBroken(vehicle, 1, true)
+	SetVehicleDoorBroken(vehicle, 2, true)
+	SetVehicleDoorBroken(vehicle, 3, true)
+	SetVehicleDoorBroken(vehicle, 4, true)
+	SetVehicleDoorBroken(vehicle, 5, true)
+	SetVehicleDoorBroken(vehicle, 6, true)
+    end
+    if engine < 600.0 then
+	SetVehicleTyreBurst(vehicle, 1, false, 990.0)
+	SetVehicleTyreBurst(vehicle, 2, false, 990.0)
+	SetVehicleTyreBurst(vehicle, 3, false, 990.0)
+	SetVehicleTyreBurst(vehicle, 4, false, 990.0)
+    end
+    if engine < 400.0 then
+	SetVehicleTyreBurst(vehicle, 0, false, 990.0)
+	SetVehicleTyreBurst(vehicle, 5, false, 990.0)
+	SetVehicleTyreBurst(vehicle, 6, false, 990.0)
+	SetVehicleTyreBurst(vehicle, 7, false, 990.0)
+    end
     SetVehiclePetrolTankHealth(vehicle, tank)
     SetVehicleEngineHealth(vehicle, engine)
     SetVehicleBodyHealth(vehicle, body)
