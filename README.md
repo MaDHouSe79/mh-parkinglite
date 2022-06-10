@@ -150,97 +150,14 @@ end)
 ````
 
 
-## Stolen Trigger, when the vehicle gets stolen by a other player with picklock
-- Added below -> TriggerEvent("qb-parking:client:stolen", lockpickedPlate)
+## Stolen Unpark and Impound Triggers, to unpark the vehicle.
 ```lua
-
--- resources/[qb]/qb-vehiclekeys/client.lua line 165 change it with this code.
-local function lockpickFinish(success)
-    local ped = PlayerPedId()
-    local pos = GetEntityCoords(ped)
-    local vehicle = QBCore.Functions.GetClosestVehicle(pos)
-    local chance = math.random()
-    if success then
-        TriggerServerEvent('hud:server:GainStress', math.random(1, 4))
-        QBCore.Functions.Notify('Opened Door!', 'success')
-        SetVehicleDoorsLocked(vehicle, 1)
-        lockpicked = true
-        lockpickedPlate = QBCore.Functions.GetPlate(vehicle)
-        TriggerEvent("qb-parking:client:stolen", lockpickedPlate) -- <---------------- HERE !!!
-    else
-        PoliceCall()
-        TriggerServerEvent('hud:server:GainStress', math.random(1, 4))
-        QBCore.Functions.Notify('Someone Called The Police!', 'error')
-    end
-    if usingAdvanced then
-        if chance <= Config.RemoveLockpickAdvanced then
-            TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["advancedlockpick"], "remove")
-            TriggerServerEvent("QBCore:Server:RemoveItem", "advancedlockpick", 1)
-        end
-    else
-        if chance <= Config.RemoveLockpickNormal then
-            TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["lockpick"], "remove")
-            TriggerServerEvent("QBCore:Server:RemoveItem", "lockpick", 1)
-        end
-    end
-end
+TriggerServerEvent('qb-parking:server:vehicle_action_stolen', plate)
+TriggerServerEvent('qb-parking:server:vehicle_action_unpark', plate)
+TriggerServerEvent('qb-parking:server:vehicle_action_impound', plate)
 ```
 
-## Impound Trigger, to unpark the vehicle.
-```lua
- TriggerEvent("qb-parking:client:impound", plate) 
-```
-
-## 👮‍♂️ Impound trigger
-- Go to resources\[qb]\qb-policejob\client\job.lua line 332
-- Find 👇 
-````lua
-RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
-    local vehicle = QBCore.Functions.GetClosestVehicle()
-    local bodyDamage = math.ceil(GetVehicleBodyHealth(vehicle))
-    local engineDamage = math.ceil(GetVehicleEngineHealth(vehicle))
-    local totalFuel = exports['LegacyFuel']:GetFuel(vehicle)
-    if vehicle ~= 0 and vehicle then
-        local ped = PlayerPedId()
-        local pos = GetEntityCoords(ped)
-        local vehpos = GetEntityCoords(vehicle)
-        if #(pos - vehpos) < 5.0 and not IsPedInAnyVehicle(ped) then
-            local plate = QBCore.Functions.GetPlate(vehicle)
-            TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
-            QBCore.Functions.DeleteVehicle(vehicle)
-        end
-    end
-end)
-````
-
-- Replace 👇
-```lua 
-RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
-    local vehicle = QBCore.Functions.GetClosestVehicle()
-    local bodyDamage = math.ceil(GetVehicleBodyHealth(vehicle))
-    local engineDamage = math.ceil(GetVehicleEngineHealth(vehicle))
-    local totalFuel = exports['LegacyFuel']:GetFuel(vehicle)
-    if vehicle ~= 0 and vehicle then
-        local ped = PlayerPedId()
-        local pos = GetEntityCoords(ped)
-        local vehpos = GetEntityCoords(vehicle)
-        if #(pos - vehpos) < 5.0 and not IsPedInAnyVehicle(ped) then
-            local plate = QBCore.Functions.GetPlate(vehicle)
-            TriggerEvent('qb-parking:client:impound', plate) -- <--- impound qb-parking trigger
-            TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
-            QBCore.Functions.DeleteVehicle(vehicle)
-        end
-    end
-end)
-```
-
-## Unpark Trigger, to unpark the vehicle, just for other garages scripts.
-```lua
- TriggerEvent("qb-parking:client:unpark", plate) 
-```
-
-
-## If you mis or dont have the table `player_boats`
+## If you mis or dont have this table `player_boats`
 ```sql
 CREATE TABLE IF NOT EXISTS `player_boats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
