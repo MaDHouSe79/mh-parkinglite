@@ -111,16 +111,6 @@ QBCore.Commands.Add(Config.Command.removevip, Lang:t("commands.removevip"), {{na
 	end
 end, 'admin')
 
-QBCore.Functions.CreateCallback("qb-parking:server:isParked", function(source, cb, plate)
-    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = ?", {plate}, function(rs)
-		if type(rs) == 'table' and #rs > 0 and rs[1] then
-			cb({status = true})
-		else
-			cb({status = false, message = Lang:t("info.car_not_found")})
-		end
-    end)
-end)
-
 QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, data)
     if Config.UseParkingSystem then
 		local src = source
@@ -224,6 +214,27 @@ QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(sou
 			cb({status = false, message = Lang:t("info.car_not_found")})
 		end
     end)
+end)
+
+QBCore.Functions.CreateCallback("qb-parking:server:isParked", function(source, cb, plate)
+    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = ?", {plate}, function(rs)
+		if type(rs) == 'table' and #rs > 0 and rs[1] then
+			cb({status = true})
+		else
+			cb({status = false, message = Lang:t("info.car_not_found")})
+		end
+    end)
+end)
+
+QBCore.Functions.CreateCallback('qb-parking:server:isOwner', function(source, cb, plate)
+	local player = GetPlayerInfo(QBCore.Functions.GetPlayer(source))
+	local player_cars  = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE citizenid = ? AND plate = ?', {player.citizenid, 3})
+	local player_boats = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_boats WHERE citizenid = ? AND plate = ?', {player.citizenid, 3})
+	if player_cars or player_boats then
+		cb(true)
+	else
+		cb(false)
+	end
 end)
 
 QBCore.Functions.CreateCallback('qb-parking:server:allowtopark', function(source, cb)
