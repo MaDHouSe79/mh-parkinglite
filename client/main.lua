@@ -30,11 +30,11 @@ local function CreateParkDisPlay(vehicleData)
 end
 
 local function doCarDamage(vehicle, health)
-	local engine = health.engine + 0.0
-	local body = health.body + 0.0
+    local engine = health.engine + 0.0
+    local body = health.body + 0.0
     local tank = health.tank + 0.0
     if body >= 900.0 then 
-        body = 1000.0
+    body = 1000.0
         SetVehicleFixed(vehicle) 
     end
     if engine >= 900.0 then 
@@ -42,11 +42,11 @@ local function doCarDamage(vehicle, health)
     end
     Wait(100)
     if body < 900.0 then
-		SmashVehicleWindow(vehicle, 0)
-		SmashVehicleWindow(vehicle, 1)
-		SmashVehicleWindow(vehicle, 2)
-		SmashVehicleWindow(vehicle, 3)
-		SmashVehicleWindow(vehicle, 4)
+        SmashVehicleWindow(vehicle, 0)
+        SmashVehicleWindow(vehicle, 1)
+        SmashVehicleWindow(vehicle, 2)
+        SmashVehicleWindow(vehicle, 3)
+        SmashVehicleWindow(vehicle, 4)
 		SmashVehicleWindow(vehicle, 5)
 		SmashVehicleWindow(vehicle, 6)
 		SmashVehicleWindow(vehicle, 7)
