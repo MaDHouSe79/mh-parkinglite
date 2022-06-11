@@ -151,6 +151,7 @@ end)
 
 
 ## Stolen Unpark and Impound Triggers, to unpark the vehicle.
+- NOTE: Change the `plate` to your value name
 ```lua
 TriggerServerEvent('qb-parking:server:vehicle_action_stolen', plate)
 TriggerServerEvent('qb-parking:server:vehicle_action_unpark', plate)
