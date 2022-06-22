@@ -35,6 +35,8 @@ Config.MaxStreetParkingPerPlayer = 1          -- 👉 max allowed parking vehicl
 
 Config.UseForVipOnly             = false
 
+Config.UseParkingBlips           = true
+
 -- 👇 change this to your own commands
 Config.Command = {
     park            = 'park',                    -- 👉 User/Admin permission
