@@ -242,6 +242,9 @@ QBCore.Functions.CreateCallback('qb-parking:server:allowtopark', function(source
     local player = GetPlayerInfo(QBCore.Functions.GetPlayer(src))
     local server_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE state = 3')
     local player_total = MySQL.Sync.fetchScalar('SELECT COUNT(*) FROM player_vehicles WHERE citizenid=? AND state = ?', {player.citizenid, 3})
+    local allowed = false
+    local server_allowed = false
+    local player_allowed = false
     if Config.UseMaxParkingOnServer then
         if server_total < Config.MaxServerParkedVehicles then
 	    server_allowed = true
@@ -280,6 +283,8 @@ QBCore.Functions.CreateCallback('qb-parking:server:allowtopark', function(source
 	end
 	if player_allowed then
 	    allowed = true
+	else
+	    allowed = false
 	end
     end
     cb({status = allowed, message = text})
