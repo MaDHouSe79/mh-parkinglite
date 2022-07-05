@@ -150,15 +150,30 @@ end)
 ````
 
 
-## Stolen Unpark and Impound Triggers, to unpark the vehicle.
+## Lockpick and Hotwire trigger, to unpark the vehicle.
 - NOTE: Change the `plate` to your value name
+
+# To Add in `resources/[qb]/qb-vehiclekeys/client/main.lua` around line: 366 just below `if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then` 
+```lua 
+TriggerServerEvent('qb-parking:server:vehicle_action_stolen', QBCore.Functions.GetPlate(vehicle))
+```
+
+
+# Add in `resources/[qb]/qb-vehiclekeys/client/main.lua` around line: 410 just below `if (math.random() <= Config.HotwireChance) then` 
+```lua 
+TriggerServerEvent('qb-parking:server:vehicle_action_stolen', QBCore.Functions.GetPlate(vehicle))
+```
+
+
+## Police Impound trigger, to unpark and impound the vehicle.
+# Add in `resources/[qb]/qb-policejob/client/job.lua` around line: 339 just below `local plate = QBCore.Functions.GetPlate(vehicle)` 
 ```lua
-TriggerServerEvent('qb-parking:server:vehicle_action_stolen', plate)
-TriggerServerEvent('qb-parking:server:vehicle_action_unpark', plate)
 TriggerServerEvent('qb-parking:server:vehicle_action_impound', plate)
 ```
 
+
 ## If you mis or dont have this table `player_boats`
+- NOTE: use this only if you have a outdated or old qb-core version.
 ```sql
 CREATE TABLE IF NOT EXISTS `player_boats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
