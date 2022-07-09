@@ -220,7 +220,7 @@ end
 -- Spawn local vehicles(server data)
 local function SpawnVehicles(vehicles)
     CreateThread(function()
-        while IsDeleting do Citizen.Wait(Config.DeleteDelay) end
+        while IsDeleting do Wait(Config.DeleteDelay) end
 	if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
 	    for i = 1, #vehicles, 1 do
                 SetEntityCollision(vehicles[i].vehicle, false, true)
