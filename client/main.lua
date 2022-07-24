@@ -204,6 +204,18 @@ local function GetPlayerInStoredCar(player)
     return findVehicle
 end
 
+local function DeleteLocalVehicleData(vehicle)
+    if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
+	for i = 1, #LocalVehicles do
+            if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
+		if vehicle.plate == LocalVehicles[i].plate then
+                    table.remove(LocalVehicles, i)
+		end
+	    end
+	end
+    end
+end
+
 local function DeleteLocalVehicle(vehicle)
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
 	for i = 1, #LocalVehicles do
@@ -455,8 +467,13 @@ RegisterNetEvent("qb-parking:client:addVehicle", function(vehicle)
     SpawnVehicle(vehicle)
 end)
 
-RegisterNetEvent("qb-parking:client:deleteVehicle", function(vehicle)
-    DeleteLocalVehicle(vehicle)
+RegisterNetEvent("qb-parking:client:deleteVehicle", function(vehicle, action)
+    if action then
+        DeleteLocalVehicleData(vehicle)
+    else
+	DeleteLocalVehicle(vehicle)
+    end
+			
 end)
 
 RegisterNetEvent("qb-parking:client:impound",  function(plate)
