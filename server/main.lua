@@ -208,7 +208,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(sou
 	    else
 		MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = ?', {plate})
 	    end
-	    TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
+	    TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate, action = action })
 	    cb({status = true})
 	else
 	    cb({status = false, message = Lang:t("info.car_not_found")})
