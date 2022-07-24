@@ -218,14 +218,14 @@ end
 
 local function DeleteLocalVehicle(vehicle)
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
-	for i = 1, #LocalVehicles do
-            if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
-		if vehicle.plate == LocalVehicles[i].plate then
-		    DeleteEntity(LocalVehicles[i].entity)
-                    table.remove(LocalVehicles, i)
-		end
-	    end
-	end
+        for i = 1, #LocalVehicles do
+                if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
+            if vehicle.plate == LocalVehicles[i].plate then
+                DeleteEntity(LocalVehicles[i].entity)
+                        table.remove(LocalVehicles, i)
+            end
+            end
+        end
     end
 end
 
@@ -233,18 +233,18 @@ end
 local function SpawnVehicles(vehicles)
     CreateThread(function()
         while IsDeleting do Wait(Config.DeleteDelay) end
-	if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
-	    for i = 1, #vehicles, 1 do
+        if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
+            for i = 1, #vehicles, 1 do
                 SetEntityCollision(vehicles[i].vehicle, false, true)
                 SetEntityVisible(vehicles[i].vehicle, false, 0)
-	        DeleteLocalVehicle(vehicles[i].vehicle)
-		LoadEntity(vehicles[i], 'server')
-		SetVehicleEngineOn(VehicleEntity, false, false, true)
-		doCarDamage(VehicleEntity, vehicles[i].vehicle.health)
-		TableInsert(VehicleEntity, vehicles[i])
-		FreezeEntityPosition(VehicleEntity, true)
-	    end
-	end
+                DeleteLocalVehicle(vehicles[i].vehicle)
+                LoadEntity(vehicles[i], 'server')
+                SetVehicleEngineOn(VehicleEntity, false, false, true)
+                doCarDamage(VehicleEntity, vehicles[i].vehicle.health)
+                TableInsert(VehicleEntity, vehicles[i])
+                FreezeEntityPosition(VehicleEntity, true)
+            end
+        end
     end)
 end
 
@@ -255,32 +255,32 @@ local function SpawnVehicle(vehicleData)
 	    while IsDeleting do Wait(Config.DeleteDelay) end
             SetEntityCollision(vehicleData.vehicle, false, true)
             SetEntityVisible(vehicleData.vehicle, false, 0)
-	    DeleteLocalVehicle(vehicleData.vehicle)
+	        DeleteLocalVehicle(vehicleData.vehicle)
             if Config.UseSpawnDelay then Wait(Config.DeleteDelay) end
-	    LoadEntity(vehicleData, 'client')
-	    PrepareVehicle(VehicleEntity, vehicleData)
+	        LoadEntity(vehicleData, 'client')
+	        PrepareVehicle(VehicleEntity, vehicleData)
             doCarDamage(VehicleEntity, vehicleData.vehicle.health)
-	    TableInsert(VehicleEntity, vehicleData)
+	        TableInsert(VehicleEntity, vehicleData)
             if Config.UseSpawnDelay then Wait(Config.FreezeDelay) end
-	    FreezeEntityPosition(VehicleEntity, true)
-	end
+	        FreezeEntityPosition(VehicleEntity, true)
+	    end
     end)
 end
 
 local function RemoveVehicles(vehicles)
     IsDeleting = true
     if type(vehicles) == 'table' and #vehicles > 0 and vehicles[1] then
-	for i = 1, #vehicles, 1 do
-	    local vehicle, distance = QBCore.Functions.GetClosestVehicle(vehicles[i].vehicle.location)
-	    if NetworkGetEntityIsLocal(vehicle) and distance < 1 then
-		local driver = GetPedInVehicleSeat(vehicle, -1)
-		if not DoesEntityExist(driver) or not IsPedAPlayer(driver) then
-		    local tmpModel = GetEntityModel(vehicle)
-		    SetModelAsNoLongerNeeded(tmpModel)
-		    DeleteEntity(vehicle)
-		    Wait(100)
-	        end
-	    end
+        for i = 1, #vehicles, 1 do
+            local vehicle, distance = QBCore.Functions.GetClosestVehicle(vehicles[i].vehicle.location)
+            if NetworkGetEntityIsLocal(vehicle) and distance < 1 then
+                local driver = GetPedInVehicleSeat(vehicle, -1)
+                if not DoesEntityExist(driver) or not IsPedAPlayer(driver) then
+                    local tmpModel = GetEntityModel(vehicle)
+                    SetModelAsNoLongerNeeded(tmpModel)
+                    DeleteEntity(vehicle)
+                    Wait(100)
+                end
+            end
         end
     end
     LocalVehicles = {}
@@ -468,25 +468,11 @@ RegisterNetEvent("qb-parking:client:addVehicle", function(vehicle)
 end)
 
 RegisterNetEvent("qb-parking:client:deleteVehicle", function(vehicle, action)
-    if action ~= mil then
-	if action == 'stolen' or action == 'unpark' then
-            DeleteLocalVehicleData(vehicle)
-        end	
-    else		
-	DeleteLocalVehicle(vehicle)		
-    end	
-end)
-
-RegisterNetEvent("qb-parking:client:impound",  function(plate)
-    TriggerServerEvent('qb-parking:server:vehicle_action_impound', plate)
-end)
-
-RegisterNetEvent("qb-parking:client:stolen",  function(plate)
-    TriggerServerEvent('qb-parking:server:vehicle_action_stolen', plate)
-end)
-
-RegisterNetEvent("qb-parking:client:unpark", function(plate)
-    TriggerServerEvent('qb-parking:server:vehicle_action_unpark', plate)
+    if action == 'unpark' then
+        DeleteLocalVehicleData(vehicle)
+    else
+        DeleteLocalVehicle(vehicle)
+    end
 end)
 
 RegisterNetEvent("qb-parking:client:isUsingParkCommand", function()
