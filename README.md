@@ -168,7 +168,7 @@ TriggerServerEvent('qb-parking:server:vehicle_action_unpark', QBCore.Functions.G
 - Add in `resources/[qb]/qb-policejob/client/job.lua` around line: 339 
 - just below `local plate = QBCore.Functions.GetPlate(vehicle)` 
 ```lua
-TriggerServerEvent('qb-parking:server:vehicle_action_unpark', plate)
+TriggerServerEvent('qb-parking:server:vehicle_action_impound', plate)
 ```
 
 
