@@ -468,12 +468,13 @@ RegisterNetEvent("qb-parking:client:addVehicle", function(vehicle)
 end)
 
 RegisterNetEvent("qb-parking:client:deleteVehicle", function(vehicle, action)
-    if action then
-        DeleteLocalVehicleData(vehicle)
-    else
-	DeleteLocalVehicle(vehicle)
-    end
-			
+    if action ~= mil then
+	if action == 'stolen' or action == 'unpark' then
+            DeleteLocalVehicleData(vehicle)
+        end	
+    else		
+	DeleteLocalVehicle(vehicle)		
+    end	
 end)
 
 RegisterNetEvent("qb-parking:client:impound",  function(plate)
