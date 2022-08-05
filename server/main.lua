@@ -295,7 +295,8 @@ RegisterServerEvent('qb-parking:server:vehicle_action_unpark', function(plate)
 		if type(rs) == 'table' and #rs > 0 and rs[1] then
 			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {plate})
 			MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = ?', {plate})
-			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate, action = 'unpark' })
+			TriggerClientEvent("qb-parking:client:deleteVehicleData", -1, { plate = data.plate})
+			--TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate, action = 'unpark' })
 		end
     end)
 end)
