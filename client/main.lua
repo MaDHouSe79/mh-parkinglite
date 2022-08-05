@@ -475,12 +475,12 @@ RegisterNetEvent("qb-parking:client:addVehicle", function(vehicle)
     SpawnVehicle(vehicle)
 end)
 
-RegisterNetEvent("qb-parking:client:deleteVehicleData", function(vehicle)
-    DeleteLocalVehicleData(vehicle)
+RegisterNetEvent("qb-parking:client:deleteVehicleData", function(plate)
+    DeleteLocalVehicleData(plate)
 end)
 
-RegisterNetEvent("qb-parking:client:deleteVehicle", function(vehicle)
-    DeleteLocalVehicle(vehicle)
+RegisterNetEvent("qb-parking:client:deleteVehicle", function(plate)
+    DeleteLocalVehicle(plate)
 end)
 
 RegisterNetEvent("qb-parking:client:isUsingParkCommand", function()
