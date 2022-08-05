@@ -317,8 +317,8 @@ local function Drive(player, vehicle, warp)
     QBCore.Functions.TriggerCallback("qb-parking:server:drive", function(callback)
         if callback.status then
             if Config.UseParkingBlips then RemoveBlip(vehicle.blip) end
-            vehicle = false
             FreezeEntityPosition(vehicle, false)
+            vehicle = false
         else
             QBCore.Functions.Notify(callback.message, "error", 5000)
         end
