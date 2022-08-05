@@ -318,7 +318,7 @@ local function Drive(player, vehicle, warp)
         if callback.status then
             if Config.UseParkingBlips then RemoveBlip(vehicle.blip) end
             vehicle = false
-            FreezeEntityPosition(VehicleEntity, false)
+            FreezeEntityPosition(vehicle, false)
         else
             QBCore.Functions.Notify(callback.message, "error", 5000)
         end
