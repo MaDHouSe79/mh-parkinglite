@@ -204,23 +204,23 @@ local function GetPlayerInStoredCar(player)
     return findVehicle
 end
 
-local function DeleteLocalVehicleData(vehicle)
+local function DeleteLocalVehicleData(plate)
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
-	    for i = 1, #LocalVehicles do
-            if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
-		        if vehicle.plate == LocalVehicles[i].plate then
+	for i = 1, #LocalVehicles do
+            if type(plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
+		if plate == LocalVehicles[i].plate then
                     table.remove(LocalVehicles, i)
-		        end
-	        end
+		end
 	    end
+	end
     end
 end
 
-local function DeleteLocalVehicle(vehicle)
+local function DeleteLocalVehicle(plate)
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
         for i = 1, #LocalVehicles do
-            if type(vehicle.plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
-                if vehicle.plate == LocalVehicles[i].plate then
+            if type(plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
+                if plate == LocalVehicles[i].plate then
                     DeleteEntity(LocalVehicles[i].entity)
                     table.remove(LocalVehicles, i)
                 end
