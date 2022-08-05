@@ -204,6 +204,18 @@ local function GetPlayerInStoredCar(player)
     return findVehicle
 end
 
+local function UnfreezeVehicle(plate)
+    if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
+	for i = 1, #LocalVehicles do
+            if type(plate) ~= 'nil' and type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].plate) ~= 'nil' then
+		if plate == LocalVehicles[i].plate then
+                    FreezeEntityPosition(LocalVehicles[i].entity, false)
+		end
+	    end
+	end
+    end
+end
+
 local function DeleteLocalVehicleData(plate)
     if type(LocalVehicles) == 'table' and #LocalVehicles > 0 and LocalVehicles[1] then
 	for i = 1, #LocalVehicles do
@@ -473,6 +485,10 @@ end)
 
 RegisterNetEvent("qb-parking:client:addVehicle", function(vehicle)
     SpawnVehicle(vehicle)
+end)
+
+RegisterNetEvent("qb-parking:client:unfreezeVehicle", function(plate)
+    UnfreezeVehicle(plate)
 end)
 
 RegisterNetEvent("qb-parking:client:deleteVehicleData", function(plate)
