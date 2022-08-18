@@ -118,6 +118,13 @@ local function LoadEntity(vehicleData, type)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleDoorsLocked(VehicleEntity, 2)
     if type == 'server' then
+	if PlayerData.citizenid == v.citizenid then
+            if Config.ImUsingAOtherKeyScript then
+                TriggerServerEvent(Config.KeyScriptTrigger, v.plate)
+	    else
+                TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', v.plate)
+            end
+        end
         TriggerEvent('qb-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
     end
     PrepareVehicle(VehicleEntity, vehicleData)
