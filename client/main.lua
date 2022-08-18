@@ -117,7 +117,7 @@ local function LoadEntity(vehicleData, type)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     
 	
-    local netid = NetworkGetNetworkIdFromEntity(veh)
+    local netid = NetworkGetNetworkIdFromEntity(VehicleEntity)
     SetVehicleHasBeenOwnedByPlayer(VehicleEntity, true)
     SetNetworkIdCanMigrate(netid, true)
 	
