@@ -65,9 +65,9 @@ local function doCarDamage(vehicle, health)
         SetVehicleTyreBurst(vehicle, 6, false, 990.0)
         SetVehicleTyreBurst(vehicle, 7, false, 990.0)
     end
-        SetVehiclePetrolTankHealth(vehicle, tank)
-        SetVehicleEngineHealth(vehicle, engine)
-        SetVehicleBodyHealth(vehicle, body)
+    SetVehiclePetrolTankHealth(vehicle, tank)
+    SetVehicleEngineHealth(vehicle, engine)
+    SetVehicleBodyHealth(vehicle, body)
 end
 
 local function SetFuel(vehicle, fuel)
