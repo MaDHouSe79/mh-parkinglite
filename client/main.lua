@@ -176,14 +176,14 @@ end
 
 local function DisplayParkedOwnerText()
     if Config.UseParkedVehicleNames then -- for performes
-	    local pl = GetEntityCoords(PlayerPedId())
-	    local displayWhoOwnesThisCar = nil
-	    for k, vehicle in pairs(LocalVehicles) do
-	        if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) < Config.DisplayDistance then
+	local pl = GetEntityCoords(PlayerPedId())
+	local displayWhoOwnesThisCar = nil
+	for k, vehicle in pairs(LocalVehicles) do
+	    if #(pl - vector3(vehicle.location.x, vehicle.location.y, vehicle.location.z)) < Config.DisplayDistance then
                displayWhoOwnesThisCar = CreateParkDisPlay(vehicle)
                Draw3DText(vehicle.location.x, vehicle.location.y, vehicle.location.z - 0.2, displayWhoOwnesThisCar, 0, 0.04, 0.04)
             end
-	    end
+	end
     end
 end
 
