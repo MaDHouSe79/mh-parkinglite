@@ -115,12 +115,9 @@ local function LoadEntity(vehicleData, type)
     QBCore.Functions.LoadModel(vehicleData.vehicle.props.model)
     VehicleEntity = CreateVehicle(vehicleData.vehicle.props.model, vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, true)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
-    
-	
     local netid = NetworkGetNetworkIdFromEntity(VehicleEntity)
     SetVehicleHasBeenOwnedByPlayer(VehicleEntity, true)
     SetNetworkIdCanMigrate(netid, true)
-	
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleDoorsLocked(VehicleEntity, 2)
     if type == 'server' then
