@@ -17,7 +17,7 @@ local function FindPlayerVehicles(citizenid, cb)
     local vehicles = {}
     MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ?", {citizenid}, function(rs)
         for k, v in pairs(rs) do
-	    	vehicles[#vehicles+1] = {vehicle = json.decode(v.data), plate = v.plate, citizenid = v.citizenid, citizenname = v.citizenname, model = v.vehicle, fuel = v.fuel,oil = v.oil}
+	    vehicles[#vehicles+1] = {vehicle = json.decode(v.data), plate = v.plate, citizenid = v.citizenid, citizenname = v.citizenname, model = v.vehicle, fuel = v.fuel,oil = v.oil}
         end
         cb(vehicles)
     end)
@@ -41,13 +41,8 @@ local function RefreshVehicles(src)
         if type(rs) == 'table' and #rs > 0 then
             for k, v in pairs(rs) do
                 vehicles[#vehicles+1] = {vehicle = json.decode(v.data), plate = v.plate, citizenid = v.citizenid, citizenname = v.citizenname, model = v.model, fuel = v.fuel, oil = v.oil}
-                
-		if QBCore.Functions.GetPlayer(src) ~= nil and QBCore.Functions.GetPlayer(src).PlayerData.citizenid == v.citizenid then
-                    if Config.ImUsingAOtherKeyScript then
-                        TriggerClientEvent(Config.KeyScriptTrigger, QBCore.Functions.GetPlayer(src), v.plate)
-		    else
-			TriggerClientEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlayer(src), v.plate)
-                    end
+                if QBCore.Functions.GetPlayer(src) ~= nil and QBCore.Functions.GetPlayer(src).PlayerData.citizenid == v.citizenid then
+          	    TriggerClientEvent('qb-parking:client:addkey', QBCore.Functions.GetPlayer(src), v.plate)
                 end
 	    end
             TriggerClientEvent("qb-parking:client:refreshVehicles", src, vehicles)
