@@ -102,29 +102,29 @@ end, 'admin')
 
 QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, data)
     if Config.UseParkingSystem then
-		local src = source
-		local player = GetPlayerInfo(QBCore.Functions.GetPlayer(src))
-		local isFound = false
-		local model = nil
-		FindPlayerVehicles(player.citizenid, function(vehicles) -- free for all
-			for k, v in pairs(vehicles) do
-				if type(v.plate) and data.plate == v.plate then 
-					model   = v.model
-					isFound = true 
-				end		
-			end
-			if isFound then
-				MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ? AND plate = ?", {player.citizenid, data.plate}, function(rs)
-					if type(rs) == 'table' and #rs > 0 then
-						cb({status = false, message = Lang:t("info.car_already_parked")})
-					else
-						data.model = model
-						SaveData(player, data)
-						cb({status = true, message = Lang:t("success.parked")})
-					end
-				end)	
-			end
-		end)
+	local src = source
+	local player = GetPlayerInfo(QBCore.Functions.GetPlayer(src))
+	local isFound = false
+	local model = nil
+	FindPlayerVehicles(player.citizenid, function(vehicles) -- free for all
+	    for k, v in pairs(vehicles) do
+		if type(v.plate) and data.plate == v.plate then 
+		    model   = v.model
+		    isFound = true 
+		end		
+	    end
+	    if isFound then
+		MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ? AND plate = ?", {player.citizenid, data.plate}, function(rs)
+		    if type(rs) == 'table' and #rs > 0 then
+			cb({status = false, message = Lang:t("info.car_already_parked")})
+		    else
+			data.model = model
+			SaveData(player, data)
+			cb({status = true, message = Lang:t("success.parked")})
+		    end
+		end)	
+	    end
+	end)
     else 
         cb({status  = false, message = Lang:t("system.offline")})
     end
@@ -132,42 +132,42 @@ end)
 
 QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, data)
     if Config.UseParkingSystem then
-		local src = source
-		local player = GetPlayerInfo(QBCore.Functions.GetPlayer(src))
-		local isFound = false
-		FindPlayerVehicles(player.citizenid, function(vehicles)
-			for k, v in pairs(vehicles) do
-				if type(v.plate) and data.plate == v.plate then isFound = true end
-			end
-			if isFound then
-				MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ? AND plate = ?", {player.citizenid, data.plate}, function(rs)
-					if type(rs) == 'table' and #rs > 0 and rs[1] then
-						DeleteParkedVehicle(player.citizenid, data.plate)
-						cb({status = true, message = Lang:t("info.has_take_the_car"), data = json.decode(rs[1].data), fuel = rs[1].fuel})
-						TriggerClientEvent("qb-parking:client:deleteVehicleData", -1, { plate = data.plate })
-					end
-				end)			
-			end
-		end)
+	local src = source
+	local player = GetPlayerInfo(QBCore.Functions.GetPlayer(src))
+	local isFound = false
+	FindPlayerVehicles(player.citizenid, function(vehicles)
+	    for k, v in pairs(vehicles) do
+		if type(v.plate) and data.plate == v.plate then isFound = true end
+	    end
+	    if isFound then
+		MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ? AND plate = ?", {player.citizenid, data.plate}, function(rs)
+		    if type(rs) == 'table' and #rs > 0 and rs[1] then
+			DeleteParkedVehicle(player.citizenid, data.plate)
+			cb({status = true, message = Lang:t("info.has_take_the_car"), data = json.decode(rs[1].data), fuel = rs[1].fuel})
+			TriggerClientEvent("qb-parking:client:deleteVehicleData", -1, { plate = data.plate })
+		    end
+		end)			
+	    end
+	end)
     else 
-		cb({status = false, message = Lang:t("system.offline")})
+	cb({status = false, message = Lang:t("system.offline")})
     end
 end)
 
 QBCore.Functions.CreateCallback("qb-parking:server:vehicle_action", function(source, cb, plate, action)
     MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = ?", {plate}, function(rs)
-		if type(rs) == 'table' and #rs > 0 and rs[1] then
-			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {plate})
-			if action == 'impound' then
-				MySQL.Async.execute('UPDATE player_vehicles SET state = 2 WHERE plate = ?', {plate})
-			else
-				MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = ?', {plate})
-			end
-			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate, action = action })
-			cb({status = true})
-		else
-			cb({status = false, message = Lang:t("info.car_not_found")})
-		end
+	if type(rs) == 'table' and #rs > 0 and rs[1] then
+	    MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {plate})
+	    if action == 'impound' then
+		MySQL.Async.execute('UPDATE player_vehicles SET state = 2 WHERE plate = ?', {plate})
+	    else
+		MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = ?', {plate})
+	    end
+	    TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate, action = action })
+	    cb({status = true})
+	else
+	    cb({status = false, message = Lang:t("info.car_not_found")})
+	end
     end)
 end)
 
@@ -201,88 +201,87 @@ QBCore.Functions.CreateCallback('qb-parking:server:allowtopark', function(source
     local player_allowed = false
     if Config.UseMaxParkingOnServer then
         if server_total < Config.MaxServerParkedVehicles then
-			server_allowed = true
-		else
-			text = Lang:t('info.maximum_cars', {amount = Config.MaxServerParkedVehicles})
-		end
-		if server_allowed and Config.UseMaxParkingPerPlayer then
-			if player_total < Config.MaxStreetParkingPerPlayer then
-				player_allowed = true
-			else
-				text = Lang:t('info.limit_for_player', {amount = Config.MaxStreetParkingPerPlayer})
-			end
-		end
-		if server_allowed then
-			if player_allowed then
-				allowed = true
-				text = nil
-			end
-		end
+	    server_allowed = true
 	else
-		if Config.UseMaxParkingPerPlayer then -- if a player has a park limiter 
-			if player_total < Config.MaxStreetParkingPerPlayer then -- if the total parking is lower then the config value
-				player_allowed = true -- set player allow to park
-			else
-				text = Lang:t('info.limit_for_player', {amount = Config.MaxStreetParkingPerPlayer})
-			end
-        else
-			if Config.UseForVipOnly then -- only allow for vip players
-				local isVip = MySQL.Sync.fetchScalar('SELECT * FROM player_parking_vips WHERE citizenid = ?', {player.citizenid})
-				if isVip and isVip >= 1 then
-					player_allowed = true -- set player allow to park 	
-				else
-					text = Lang:t('system.no_permission')
-				end	
-			end
-		end
-		if player_allowed then
-			allowed = true
-		else
-			allowed = false
-		end
+	    text = Lang:t('info.maximum_cars', {amount = Config.MaxServerParkedVehicles})
 	end
+	if server_allowed and Config.UseMaxParkingPerPlayer then
+	    if player_total < Config.MaxStreetParkingPerPlayer then
+		player_allowed = true
+	    else
+		text = Lang:t('info.limit_for_player', {amount = Config.MaxStreetParkingPerPlayer})
+	    end
+	end
+	if server_allowed then
+	    if player_allowed then
+		allowed = true
+		text = nil
+	    end
+	end
+    else
+	if Config.UseMaxParkingPerPlayer then -- if a player has a park limiter 
+	    if player_total < Config.MaxStreetParkingPerPlayer then -- if the total parking is lower then the config value
+		player_allowed = true -- set player allow to park
+	    else
+		text = Lang:t('info.limit_for_player', {amount = Config.MaxStreetParkingPerPlayer})
+	    end
+        else
+	    if Config.UseForVipOnly then -- only allow for vip players
+		local isVip = MySQL.Sync.fetchScalar('SELECT * FROM player_parking_vips WHERE citizenid = ?', {player.citizenid})
+		if isVip and isVip >= 1 then
+		    player_allowed = true -- set player allow to park 	
+		else
+		    text = Lang:t('system.no_permission')
+		end	
+	    end
+	end
+	if player_allowed then
+	    allowed = true
+	else
+	    allowed = false
+	end
+    end
     cb({status = allowed, message = text})
 end)
 
 RegisterServerEvent('qb-parking:server:vehicle_action_unpark', function(plate)
     MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = ?", {plate}, function(rs)
-		if type(rs) == 'table' and #rs > 0 and rs[1] then
-			TriggerClientEvent("qb-parking:client:unfreezeVehicle", -1, { plate = plate})
-			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {plate})
-			MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = ?', {plate})
-			TriggerClientEvent("qb-parking:client:deleteVehicleData", -1, { plate = plate})
-			
-		end
+	if type(rs) == 'table' and #rs > 0 and rs[1] then
+	    TriggerClientEvent("qb-parking:client:unfreezeVehicle", -1, { plate = plate})
+	    MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {plate})
+	    MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = ?', {plate})
+	    TriggerClientEvent("qb-parking:client:deleteVehicleData", -1, { plate = plate})	
+	end
     end)
 end)
 
 RegisterServerEvent('qb-parking:server:vehicle_action_impound', function(plate)
     MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = ?", {plate}, function(rs)
-		if type(rs) == 'table' and #rs > 0 and rs[1] then
-			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {plate})
-			MySQL.Async.execute('UPDATE player_vehicles SET garage = ? WHERE plate = ?', {'depot', plate})
-			TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate, action = 'impound' })
-		end
+	if type(rs) == 'table' and #rs > 0 and rs[1] then
+	    MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {plate})
+	    MySQL.Async.execute('UPDATE player_vehicles SET garage = ? WHERE plate = ?', {'depot', plate})
+	    TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate, action = 'impound' })
+	end
     end)
 end)
 
 AddEventHandler('onResourceStart', function(resource)
     if resource == GetCurrentResourceName() then
-		print("[qb-parking] - parked vehicles state check reset.")
-		MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE state = 0 OR state = 1 OR state = 2", {}, function(vehicles)
-			if type(vehicles) == 'table' and #vehicles > 0 then
-				for _, vehicle in pairs(vehicles) do
-					MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = ?", {vehicle.plate}, function(rs)
-						if type(rs) == 'table' and #rs > 0 then
-							for _, v in pairs(rs) do
-								MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {vehicle.plate})
-								MySQL.Async.execute('UPDATE player_vehicles SET state = ? WHERE plate = ?', {Config.ResetState, vehicle.plate})					
-							end
-						end
-					end)
-				end
+	print("[qb-parking] - parked vehicles state check reset.")
+	MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE state = 0 OR state = 1 OR state = 2", {}, function(vehicles)
+	    if type(vehicles) == 'table' and #vehicles > 0 then
+		for _, vehicle in pairs(vehicles) do
+		    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = ?", {vehicle.plate}, function(rs)
+			if type(rs) == 'table' and #rs > 0 then
+			    for _, v in pairs(rs) do
+				MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {vehicle.plate})
+				MySQL.Async.execute('UPDATE player_vehicles SET state = ? WHERE plate = ?', {Config.ResetState, vehicle.plate})					
+			    end
 			end
-		end)
+		    end)
+		end
+            end
+	end)
     end
 end)
 
