@@ -26,6 +26,8 @@ Config.UseParkedVehicleNames     = true       -- 👉 Default is false, if you w
 Config.UseOwnerNames             = true
 Config.UseParkingBlips           = true
 
+Config.ServerKeyTrigger          = "qb-vehiclekeys:server:AcquireVehicleKeys"
+Config.ClientKeyTrigger          = "qb-vehiclekeys:server:AcquireVehicleKeys"
 
 Config.UseMaxParkingOnServer     = true       -- 👉 if you want to limit the parking on the server
 Config.MaxServerParkedVehicles   = 15         -- 👉 max allowed to park on server
