@@ -435,6 +435,7 @@ local function GetParkeddCar(vehicle)
     end
     return findVehicle
 end
+
 local isOwner = function(plate)
     local owner = false
     QBCore.Functions.TriggerCallback('qb-parking:server:isOwner', function(cb)
@@ -442,6 +443,7 @@ local isOwner = function(plate)
     end, plate)
     return owner
 end
+
 -- Create Vehicle Park Target Zone
 if Config.UseTarget then
     exports['qb-target']:AddGlobalVehicle({
@@ -544,7 +546,7 @@ CreateThread(function()
             for i = 1, #LocalVehicles do
                 if type(LocalVehicles[i]) ~= 'nil' and type(LocalVehicles[i].entity) ~= 'nil' then
                     if DoesEntityExist(LocalVehicles[i].entity) and type(LocalVehicles[i].isGrounded) == 'nil' then
-		                if #(GetEntityCoords(PlayerPedId()) - vector3(Config.ParkingLocation.x, Config.ParkingLocation.y, Config.ParkingLocation.z)) < Config.PlaceOnGroundRadius then
+		        if #(GetEntityCoords(PlayerPedId()) - vector3(Config.ParkingLocation.x, Config.ParkingLocation.y, Config.ParkingLocation.z)) < Config.PlaceOnGroundRadius then
                             SetEntityCoords(LocalVehicles[i].entity, LocalVehicles[i].location.x, LocalVehicles[i].location.y, LocalVehicles[i].location.z)
                             SetVehicleOnGroundProperly(LocalVehicles[i].entity)
                             SetVehicleFuelLevel(LocalVehicles[i].entity)
@@ -553,8 +555,8 @@ CreateThread(function()
                     end
                 end
             end
-	    end
-	    Wait(1000)
+	end
+	Wait(1000)
     end
 end)
 
@@ -605,7 +607,6 @@ CreateThread(function()
                             if speed > 0.9 then
                                 QBCore.Functions.Notify(Lang:t("info.stop_car"), 'error', 1500)
                             elseif IsThisModelACar(GetEntityModel(vehicle)) or IsThisModelABike(GetEntityModel(vehicle)) or IsThisModelABicycle(GetEntityModel(vehicle)) or IsThisModelAHeli(GetEntityModel(vehicle)) or IsThisModelAPlane(GetEntityModel(vehicle)) or IsThisModelABoat(GetEntityModel(vehicle)) then
-                                
                                 QBCore.Functions.TriggerCallback('qb-parking:server:allowtopark', function(cb)
                                     if cb.status then
                                         Save(player, vehicle, true)
