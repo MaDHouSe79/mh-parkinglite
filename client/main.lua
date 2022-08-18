@@ -122,9 +122,7 @@ local function LoadEntity(vehicleData, type)
     SetNetworkIdCanMigrate(netid, true)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleDoorsLocked(VehicleEntity, 2)
-    if type == 'server' then
-        TriggerEvent('qb-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
-    end
+    TriggerEvent('qb-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
     PrepareVehicle(VehicleEntity, vehicleData)
 end
 
@@ -489,8 +487,11 @@ RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location
 end)
 
 RegisterNetEvent('qb-parking:client:addkey', function(plate, citizenid)
-	TriggerServerEvent(Config.KeyScriptTrigger, plate)
+    if QBCore.Functions.GetPlayerData().citizenid == citizenid then
+        TriggerServerEvent(Config.KeyScriptTrigger, plate) 
+    end
 end)
+
 
 CreateThread(function()
     while not IsDeleting do
