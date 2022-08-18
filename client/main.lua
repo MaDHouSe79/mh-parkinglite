@@ -113,7 +113,7 @@ end
 local function LoadEntity(vehicleData, type)
     local model = vehicleData.vehicle.props.model
     QBCore.Functions.LoadModel(vehicleData.vehicle.props.model)
-    VehicleEntity = CreateVehicle(vehicleData.vehicle.props.model, vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, true)
+    VehicleEntity = CreateVehicle(vehicleData.vehicle.props.model, vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, true, false)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     local netid = NetworkGetNetworkIdFromEntity(VehicleEntity)
     SetVehicleHasBeenOwnedByPlayer(VehicleEntity, true)
@@ -310,7 +310,7 @@ end
 
 local function CreateVehicleEntity(vehicle)
     QBCore.Functions.LoadModel(vehicle.props.model)
-    return CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, true)
+    return CreateVehicle(vehicle.props.model, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.w, true, false)
 end
 
 local function DeleteNearByVehicle(location)
