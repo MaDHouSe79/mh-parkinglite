@@ -98,47 +98,6 @@ Thanks.
 - 👉 use the recommended parking spots in the world like you do in real life,
 - 👉 you can do of course just park at your own house on a parking spot to keep it nice and clean for everyone.
 
-![foto1](https://naskho.org/images/ReadPlease.gif)
-## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/client/main.lua.
-````lua
-RegisterNetEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', function(plate, citizenid)
-    TriggerServerEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', plate, citizenid)
-end)
-````
-
-## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua.
-- (For the old vehiclekey script)
-````lua
-RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate, citizenid)
-    if VehicleList then
-        local val = VehicleList[plate]
-        if val then
-            VehicleList[plate].owners[citizenid] = true
-        else
-            VehicleList[plate] = { owners = {} }
-            VehicleList[plate].owners[citizenid] = true
-        end
-    else
-        VehicleList = {}
-        VehicleList[plate] = { owners = {} }
-        VehicleList[plate].owners[citizenid] = true
-    end
-end)
-````
-
-## 👇 Extra Code in resources/[qb]/qb-vehiclekeys/server/main.lua. 
-- (For the new vehiclekey script)
-````lua
-RegisterNetEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', function(plate, citizenid)
-    local src = source
-    if not VehicleList[plate] then 
-        VehicleList[plate] = {} 
-    end
-    VehicleList[plate][citizenid] = true
-    TriggerClientEvent('QBCore:Notify', src, "You get keys to the vehicle!")
-    TriggerClientEvent('qb-vehiclekeys:client:AddKeys', src, plate)
-end)
-````
 
 ## 👇 To keep things nice and clean for the qb-core system and database.
 - ✅ Go to resources[qb]/qb-core/server/player.lua around line 506, and find, local playertables = {}. 
@@ -148,7 +107,6 @@ end)
 { table = 'player_parking' },
 { table = 'player_parking_vips' },
 ````
-
 
 # Lockpick and or Hotwire trigger, to only unpark the vehicle.
 - To Add in `resources/[qb]/qb-vehiclekeys/client/main.lua` around line: 366.
