@@ -25,7 +25,7 @@ local function CreateParkDisPlay(vehicleData)
     if Config.UseOwnerNames then owner = string.format(Lang:t("info.owner", {owner = vehicleData.citizenname}))..'\n' end
     model = string.format(Lang:t("info.model", {model = name}))..'\n'
     plate = string.format(Lang:t("info.plate", {plate = plate}))..'\n'
-    if Config.UseOwnerNames then info  = string.format("%s", model..plate..owner) else info  = string.format("%s", model..plate) end    
+    if Config.UseOwnerNames then info = string.format("%s", model..plate..owner) else info = string.format("%s", model..plate) end    
     return info
 end
 
