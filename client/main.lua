@@ -527,7 +527,11 @@ RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location
 end)
 
 RegisterNetEvent('qb-parking:client:addkey', function(plate, citizenid)
-    TriggerServerEvent('vehiclekeys:server:SetVehicleOwnerToCitizenid', plate, citizenid)
+    if Config.ImUsingAOtherKeyScript then
+	TriggerServerEvent(Config.KeyScriptTrigger , plate)
+    else
+	TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', plate)
+    end
 end)
 
 CreateThread(function()
