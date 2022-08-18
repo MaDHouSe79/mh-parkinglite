@@ -528,7 +528,7 @@ end)
 
 RegisterNetEvent('qb-parking:client:addkey', function(plate, citizenid)
     if Config.ImUsingAOtherKeyScript then
-	TriggerServerEvent(Config.KeyScriptTrigger , plate)
+	TriggerServerEvent(Config.KeyScriptTrigger, plate)
     else
 	TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', plate)
     end
