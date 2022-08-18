@@ -40,11 +40,6 @@ local function RefreshVehicles(src)
         if type(rs) == 'table' and #rs > 0 then
             for k, v in pairs(rs) do
                 vehicles[#vehicles+1] = {vehicle = json.decode(v.data), plate = v.plate, citizenid = v.citizenid, citizenname = v.citizenname, model = v.model, fuel = v.fuel, oil = v.oil}
-                if QBCore.Functions.GetPlayer(src) ~= nil and QBCore.Functions.GetPlayer(src).PlayerData.citizenid == v.citizenid then
-                    if not Config.ImUsingOtherKeyScript then
-			TriggerEvent('vehiclekeys:client:SetVehicleOwnerToCitizenid', v.plate, v.citizenid)
-                    end
-                end
             end
             TriggerClientEvent("qb-parking:client:refreshVehicles", src, vehicles)
         end
