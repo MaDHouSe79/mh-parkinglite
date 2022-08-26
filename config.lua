@@ -26,6 +26,9 @@ Config.ResetState             = 1            -- 👉 1 is stored in garage, 2 is
 Config.UseParkingSystem       = true         -- 👉 Auto turn on when server is starting. (default true)
 Config.UseParkedVehicleNames  = true         -- 👉 Default is false, if you want to see names just type /park-names on/off if you set this to true it is auto on 
 
+
+Config.KeyScriptTrigger       = "qb-vehiclekeys:server:AcquireVehicleKeys"
+
 -- 👇 change this to your own commands
 Config.Command = {
     park         = 'park',                   -- 👉 User/Admin permission
