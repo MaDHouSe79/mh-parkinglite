@@ -134,7 +134,7 @@ local function LoadEntity(vehicleData, type)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleDoorsLocked(VehicleEntity, 2)
     if type == 'server' then
-        TriggerServerEvent('qb-vehiclekeys:server:AcquireVehicleKeys', vehicleData.plate)
+        TriggerEvent('qb-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
 	end
     PrepareVehicle(VehicleEntity, vehicleData)
 end
@@ -536,6 +536,12 @@ end)
 RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location)
     SetNewWaypoint(location.x, location.y)
     QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success')
+end)
+
+RegisterNetEvent('qb-parking:client:addkey', function(plate, citizenid)
+    if QBCore.Functions.GetPlayerData().citizenid == citizenid then
+        TriggerServerEvent(Config.KeyScriptTrigger, plate) 
+    end
 end)
 
 RegisterNetEvent("qb-parking:client:GetUpdate", function(state)
