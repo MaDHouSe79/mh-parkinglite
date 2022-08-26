@@ -35,15 +35,6 @@ local function FindPlayerVehicles(citizenid, cb)
     end)
 end
 
-local function FindPlayerBoats(citizenid, cb)
-    local boats = {}
-    MySQL.Async.fetchAll("SELECT * FROM player_boats WHERE citizenid = @citizenid", {['@citizenid'] = citizenid}, function(rs)
-        for k, v in pairs(rs) do
-			boats[#boats+1] = { citizenid = v.citizenid, plate = v.plate}
-        end  
-    end)
-	cb(boats)
-end
 
 -- Get the number of the vehicles.
 local function GetVehicleNumOfParking()
@@ -73,7 +64,7 @@ local function RefreshVehicles(src)
                 }
                 if QBCore.Functions.GetPlayer(src) ~= nil and QBCore.Functions.GetPlayer(src).PlayerData.citizenid == v.citizenid then
                     if not Config.ImUsingOtherKeyScript then
-                        TriggerClientEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlayer(src), v.plate)
+						TriggerClientEvent('qb-parking:client:addkey', v.plate, v.citizenid)
                     end
                 end
             end
@@ -146,20 +137,6 @@ QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, v
 						end
 					end
 				end)	
-			else 
-				FindPlayerBoats(GetCitizenid(Player), function(boats) 
-					for k, v in pairs(boats) do
-						if type(v.plate) and vehicleData.plate == v.plate then
-							isFound = true
-						end		
-					end
-					if isFound then
-						SaveData(Player, vehicleData)
-						cb({status  = true, message = Lang:t("success.parked")})
-					else
-						cb({status  = false, message = Lang:t("info.must_own_car")})
-					end
-				end)
 			end
 		end)
 	else 
@@ -205,44 +182,7 @@ QBCore.Functions.CreateCallback("qb-parking:server:drive", function(source, cb, 
 						})
 						TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
 					end
-				end)
-			else
-				FindPlayerBoats(GetCitizenid(Player), function(boats) 
-					for k, v in pairs(boats) do
-						if type(v.plate) and vehicleData.plate == v.plate then
-							isFound = true
-						end
-					end
-					if isFound then
-						MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = @citizenid AND plate = @plate", {
-							['@citizenid'] = GetCitizenid(Player),
-							['@plate'] = plate
-						}, function(rs)
-							if type(rs) == 'table' and #rs > 0 and rs[1] then
-								MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate AND citizenid = @citizenid', {
-									["@plate"]     = plate,
-									["@citizenid"] = GetCitizenid(Player)
-								})
-								MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = @plate AND citizenid = @citizenid', {
-									["@plate"]     = plate,
-									["@citizenid"] = GetCitizenid(Player)
-								})
-								cb({
-									status  = true,
-									message = Lang:t("info.has_take_the_car"),
-									data    = json.decode(rs[1].data),
-									fuel    = rs[1].fuel,
-								})
-								TriggerClientEvent("qb-parking:client:deleteVehicle", -1, { plate = plate })
-							end
-						end)
-					else
-						cb({
-							status  = false,
-							message = Lang:t("info.must_own_car"),
-						})
-					end
-				end)				
+				end)			
 			end
 		end)
     else 
