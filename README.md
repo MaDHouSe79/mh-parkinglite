@@ -15,7 +15,6 @@ This is just how you park in real live 😁 so park anywhere you want 👊😁�
 ## 💪 Dependencies
 - ✅ [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
 - ✅ [qb-core](https://github.com/qbcore-framework/qb-core)
-- ✅ [qb-garages](https://github.com/MaDHouSe79/qb-garages)
 - ✅ [qb-vehiclekeys](https://github.com/qbcore-framework/qb-vehiclekeys)
 
 ## 💪 Optional
