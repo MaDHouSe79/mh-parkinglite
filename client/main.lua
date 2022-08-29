@@ -6,28 +6,11 @@ local UpdateAvailable    = false
 local SpawnedVehicles    = false
 local isUsingParkCommand = false
 local IsDeleting         = false
-local OnDuty             = false
 local InParking          = false
 local LastUsedPlate      = nil
 local VehicleEntity      = nil
 local action             = 'none'
 
-
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    PlayerData = QBCore.Functions.GetPlayerData()
-end)
-RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job)
-    PlayerJob = job
-end)
-RegisterNetEvent('QBCore:Client:SetDuty', function(duty)
-    OnDuty = duty
-end)
-RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
-    PlayerData = data
-end)
-
-
---------------------------------------------Local Functions--------------------------------------------
 local function CreateParkDisPlay(vehicleData)
     local info, model, owner, plate = nil
     if Config.UseOwnerNames then
@@ -481,8 +464,15 @@ local function checkDistanceToForceGrounded(distance)
     end
 end
 
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    PlayerData = QBCore.Functions.GetPlayerData()
+end)
 
-------------------------------------------------Commands-----------------------------------------------
+RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
+    PlayerData = data
+end)
+
+
 RegisterKeyMapping('park', Lang:t('system.park_or_drive'), 'keyboard', Config.KeyBindButton) 
 
 RegisterCommand(Config.Command.park, function()
@@ -499,7 +489,7 @@ RegisterCommand(Config.Command.parknames, function()
     end
 end, false)
 
----------------------------------------------------Events----------------------------------------------
+
 RegisterNetEvent("mh-parking:client:refreshVehicles", function(vehicles)
     GlobalVehicles = vehicles
     RemoveVehicles(vehicles)
@@ -551,12 +541,6 @@ RegisterNetEvent("mh-parking:client:GetUpdate", function(state)
     end
 end)
 
-
-
--------------------------------------------------Thread-------------------------------------------------
-CreateThread(function()
-    PlayerData = QBCore.Functions.GetPlayerData()
-end)
 
 CreateThread(function()
 	while not IsDeleting do
