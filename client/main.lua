@@ -134,7 +134,7 @@ local function LoadEntity(vehicleData, type)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleDoorsLocked(VehicleEntity, 2)
     if type == 'server' then
-        TriggerEvent('qb-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
+        TriggerEvent('mh-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
 	end
     PrepareVehicle(VehicleEntity, vehicleData)
 end
@@ -369,7 +369,7 @@ end
 
 local function Drive(player, vehicle)
     action = 'drive'
-    QBCore.Functions.TriggerCallback("qb-parking:server:drive", function(callback)
+    QBCore.Functions.TriggerCallback("mh-parking:server:drive", function(callback)
         if callback.status then
             QBCore.Functions.DeleteVehicle(vehicle.entity)
             QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(player))
@@ -408,7 +408,7 @@ local function Save(player, vehicle)
     local carModelName = GetLabelText(displaytext)
     action             = 'park'
     LastUsedPlate      = vehicleProps.plate
-    QBCore.Functions.TriggerCallback("qb-parking:server:save", function(callback)
+    QBCore.Functions.TriggerCallback("mh-parking:server:save", function(callback)
         if callback.status then
             QBCore.Functions.DeleteVehicle(vehicle)
         else
@@ -433,7 +433,7 @@ end
 local function ActionVehicle(plate, action)
     for i = 1, #LocalVehicles do
         if LocalVehicles[i].plate == plate then
-            QBCore.Functions.TriggerCallback("qb-parking:server:vehicle_action", function(callback)
+            QBCore.Functions.TriggerCallback("mh-parking:server:vehicle_action", function(callback)
                 if callback.status then
                     FreezeEntityPosition(LocalVehicles[i].entity, false)
                     if action == 'impound' then
@@ -500,7 +500,7 @@ RegisterCommand(Config.Command.parknames, function()
 end, false)
 
 ---------------------------------------------------Events----------------------------------------------
-RegisterNetEvent("qb-parking:client:refreshVehicles", function(vehicles)
+RegisterNetEvent("mh-parking:client:refreshVehicles", function(vehicles)
     GlobalVehicles = vehicles
     RemoveVehicles(vehicles)
     Wait(1000)
@@ -508,43 +508,43 @@ RegisterNetEvent("qb-parking:client:refreshVehicles", function(vehicles)
     Wait(1000)
 end)
 
-RegisterNetEvent("qb-parking:client:addVehicle", function(vehicle)
+RegisterNetEvent("mh-parking:client:addVehicle", function(vehicle)
     SpawnVehicle(vehicle)
 end)
 
-RegisterNetEvent("qb-parking:client:deleteVehicle", function(vehicle)
+RegisterNetEvent("mh-parking:client:deleteVehicle", function(vehicle)
     DeleteLocalVehicle(vehicle)
 end)
 
-RegisterNetEvent("qb-parking:client:impound",  function(plate)
+RegisterNetEvent("mh-parking:client:impound",  function(plate)
     ActionVehicle(plate, 'impound')
 end)
 
-RegisterNetEvent("qb-parking:client:stolen",  function(plate)
+RegisterNetEvent("mh-parking:client:stolen",  function(plate)
     local tmpPlate = plate 
     ActionVehicle(plate, 'stolen')
 end)
 
-RegisterNetEvent("qb-parking:client:unpark", function(plate)
+RegisterNetEvent("mh-parking:client:unpark", function(plate)
     ActionVehicle(plate, 'unpark')
 end)
 
-RegisterNetEvent("qb-parking:client:isUsingParkCommand", function()
+RegisterNetEvent("mh-parking:client:isUsingParkCommand", function()
     isUsingParkCommand = true
 end)
 
-RegisterNetEvent('qb-parking:client:setParkedVecihleLocation', function(location)
+RegisterNetEvent('mh-parking:client:setParkedVecihleLocation', function(location)
     SetNewWaypoint(location.x, location.y)
     QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success')
 end)
 
-RegisterNetEvent('qb-parking:client:addkey', function(plate, citizenid)
+RegisterNetEvent('mh-parking:client:addkey', function(plate, citizenid)
     if QBCore.Functions.GetPlayerData().citizenid == citizenid then
         TriggerServerEvent(Config.KeyScriptTrigger, plate) 
     end
 end)
 
-RegisterNetEvent("qb-parking:client:GetUpdate", function(state)
+RegisterNetEvent("mh-parking:client:GetUpdate", function(state)
     UpdateAvailable = state
     if UpdateAvailable then
         print("There is a update for qb-parking")
@@ -588,7 +588,7 @@ CreateThread(function()
 		if InParking then
 			if not SpawnedVehicles then
 				RemoveVehicles(GlobalVehicles)
-				TriggerServerEvent("qb-parking:server:refreshVehicles", crParking)
+				TriggerServerEvent("mh-parking:server:refreshVehicles", crParking)
 				SpawnedVehicles = true
 				Wait(2000)
 			end
