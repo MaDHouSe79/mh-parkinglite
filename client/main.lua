@@ -132,9 +132,11 @@ end
 
 -- Insert Data to table
 local function TableInsert(VehicleEntity, vehicleData)
-    
-    local tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = vehicleData.modelname}), vehicleData.vehicle.location)
-    
+    local tmpBlip = nil
+    if PlayerData.citizenid == vehicleData.citizenid then
+        tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = vehicleData.modelname}), vehicleData.vehicle.location)
+	TriggerClientEvent('mh-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
+    end    
     LocalVehicles[#LocalVehicles+1] = {
 		entity      = VehicleEntity,
 		vehicle     = vehicleData.mods,
@@ -233,9 +235,6 @@ local function SpawnVehicles(vehicles)
 				LoadEntity(vehicles[i], 'server')
 				SetVehicleEngineOn(VehicleEntity, false, false, true)
 				doCarDamage(VehicleEntity, vehicles[i].vehicle.health)
-                if vehicles[i].citizenid ~= QBCore.Functions.GetPlayerData().citizenid then
-                    SetVehicleDoorsLocked(VehicleEntity, 2)
-                end
 				TableInsert(VehicleEntity, vehicles[i])
 				DoAction(action, vehicles[i])
                 if Config.UseSpawnDelay then Wait(Config.FreezeDelay) end
@@ -258,9 +257,6 @@ local function SpawnVehicle(vehicleData)
 			PrepareVehicle(VehicleEntity, vehicleData)
 			SetVehicleEngineOn(VehicleEntity, false, false, true)
 			doCarDamage(VehicleEntity, vehicleData.vehicle.health)
-			if vehicleData.citizenid ~= QBCore.Functions.GetPlayerData().citizenid then
-				SetVehicleDoorsLocked(VehicleEntity, 2)
-			end
 			TableInsert(VehicleEntity, vehicleData)
 			DoAction(action, vehicleData)
             if Config.UseSpawnDelay then Wait(Config.FreezeDelay) end
