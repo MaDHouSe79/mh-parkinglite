@@ -111,14 +111,12 @@ end
 
 -- Load Entity
 local function LoadEntity(vehicleData, type)
-	QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
+    QBCore.Functions.LoadModel(vehicleData.vehicle.props["model"])
     VehicleEntity = CreateVehicle(vehicleData.vehicle.props["model"], vehicleData.vehicle.location.x, vehicleData.vehicle.location.y, vehicleData.vehicle.location.z - 0.1, vehicleData.vehicle.location.w, false)
     QBCore.Functions.SetVehicleProperties(VehicleEntity, vehicleData.vehicle.props)
     SetVehicleEngineOn(VehicleEntity, false, false, true)
     SetVehicleDoorsLocked(VehicleEntity, 2)
-    if type == 'server' then
-        TriggerEvent('mh-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
-	end
+    TriggerEvent('mh-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
     PrepareVehicle(VehicleEntity, vehicleData)
 end
 
