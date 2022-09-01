@@ -135,8 +135,8 @@ local function TableInsert(VehicleEntity, vehicleData)
     local tmpBlip = nil
     if vehicleData.citizenid == PlayerData.citizenid then
         tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = vehicleData.modelname}), vehicleData.vehicle.location)
-	TriggerClientEvent('mh-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
-    end    
+    end 
+    TriggerClientEvent('mh-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
     LocalVehicles[#LocalVehicles+1] = {
 		entity      = VehicleEntity,
 		vehicle     = vehicleData.mods,
