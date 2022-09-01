@@ -30,6 +30,7 @@ local function FindPlayerVehicles(citizenid, cb)
 		fuel        = v.fuel,
 		oil         = v.oil,
 	    }
+	    TriggerClientEvent('mh-parking:client:addkey', v.plate, v.citizenid)
         end
         cb(vehicles)
     end)
