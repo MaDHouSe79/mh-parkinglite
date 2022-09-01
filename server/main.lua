@@ -21,15 +21,7 @@ local function FindPlayerVehicles(citizenid, cb)
     local vehicles = {}
     MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ?", {citizenid}, function(rs)
         for k, v in pairs(rs) do
-	    vehicles[#vehicles+1] = {
-		vehicle     = json.decode(v.data),
-		plate       = v.plate,
-		citizenid   = v.citizenid,
-		citizenname = v.citizenname,
-		model       = v.model,
-		fuel        = v.fuel,
-		oil         = v.oil,
-	    }
+	    vehicles[#vehicles+1] = {plate = v.plate}
 	    TriggerClientEvent('mh-parking:client:addkey', v.plate, v.citizenid)
         end
         cb(vehicles)
@@ -101,13 +93,13 @@ end
 -- Save the car to database
 QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, vehicleData)
     if UseParkingSystem then
-	local src     = source
-	local Player  = QBCore.Functions.GetPlayer(src)
-	local plate   = vehicleData.plate
+	local src = source
+	local Player = QBCore.Functions.GetPlayer(src)
+	local plate = vehicleData.plate
 	local isFound = false
-	FindPlayerVehicles(GetCitizenid(Player), function(vehicles) -- free for all
+	FindPlayerVehicles(GetCitizenid(Player), function(vehicles)
 	    for k, v in pairs(vehicles) do
-		if type(v.plate) and plate == v.plate then
+		if plate == v.plate then
 		    isFound = true
 		end		
 	    end
@@ -140,7 +132,7 @@ QBCore.Functions.CreateCallback("mh-parking:server:drive", function(source, cb, 
 	local isFound = false
 	FindPlayerVehicles(GetCitizenid(Player), function(vehicles)
 	    for k, v in pairs(vehicles) do
-	        if type(v.plate) and plate == v.plate then
+	        if plate == v.plate then
 		    isFound = true
 		end
 	    end
