@@ -133,7 +133,7 @@ end
 -- Insert Data to table
 local function TableInsert(VehicleEntity, vehicleData)
     local tmpBlip = nil
-    if PlayerData.citizenid == vehicleData.citizenid then
+    if vehicleData.citizenid == PlayerData.citizenid then
         tmpBlip = CreateParkedBlip(Lang:t('system.parked_blip_info',{modelname = vehicleData.modelname}), vehicleData.vehicle.location)
 	TriggerClientEvent('mh-parking:client:addkey', vehicleData.plate, vehicleData.citizenid)
     end    
