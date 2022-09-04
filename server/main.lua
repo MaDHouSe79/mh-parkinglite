@@ -196,6 +196,16 @@ AddEventHandler('onResourceStart', function(resource)
     end
 end)
 
+RegisterServerEvent('mh-parking:server:onjoin', function(id, citizenid)
+    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ?", {citizenid}, function(vehicles)
+        for k, v in pairs(vehicles) do
+            if v.citizenid == citizenid then
+                TriggerClientEvent('mh-parking:client:addkey', id, v.plate, v.citizenid)
+            end
+        end
+    end)
+end)
+
 -- When the client request to refresh the vehicles.
 RegisterServerEvent('mh-parking:server:refreshVehicles', function(parkingName)
     RefreshVehicles(source)
