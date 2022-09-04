@@ -433,7 +433,9 @@ local function checkDistanceToForceGrounded(distance)
 end
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    local id = GetPlayerServerId(PlayerId())
     PlayerData = QBCore.Functions.GetPlayerData()
+    TriggerServerEvent('mh-parking:server:onjoin', id, PlayerData.citizenid)
 end)
 
 RegisterNetEvent('QBCore:Player:SetPlayerData', function(data)
