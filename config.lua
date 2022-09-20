@@ -5,6 +5,8 @@ Config.UseSpawnDelay          = true         -- 👉 Default true, if your vehic
 Config.DeleteDelay            = 1500         -- 👉 Default 1500, a delay for spawning in a other vehicle. (works only if Config.UseSpawnDelay = true)
 Config.FreezeDelay            = 50           -- 👉 Default 50, a sort delay for freezeing a vehicle. (works only if Config.UseSpawnDelay = true)
 
+Config.InteractDistance       = 5            -- interact distance for target eye
+
 Config.UseOwnerNames          = true
 
 Config.CheckForUpdates        = true         -- 👉 If you want to stay updated keep it on true.
