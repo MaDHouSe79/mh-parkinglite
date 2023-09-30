@@ -96,4 +96,3 @@ This is just how you park in real live 😁 so park anywhere you want 👊😁�
 
 ## 🙈 Youtube & Discord
 - [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
-- [Discord](https://discord.gg/cEMSeE9dgS)
