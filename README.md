@@ -94,5 +94,5 @@ This is just how you park in real live 😁 so park anywhere you want 👊😁�
 - Keep it nice and clean for everybody and have fun with this awesome qb-parking mod 😎👍
 
 
-## 🙈 Youtube & Discord
+## 🙈 Youtube
 - [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
