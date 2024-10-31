@@ -3,7 +3,7 @@ games { 'gta5' }
 
 author 'MaDHouSe'
 description 'QB Realistic Vehicle Parking'
-version '1.4'
+version '1.0.0'
 
 shared_scripts {
     '@qb-core/shared/locale.lua',
@@ -19,6 +19,7 @@ client_scripts {
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'server/main.lua',
+    'server/update.lua',
 }
 
 dependencies {
