@@ -3,7 +3,7 @@ games { 'gta5' }
 lua54 'yes'
 author 'MaDHouSe79'
 description 'MH Parking Lite - A Realistic Vehicle Parking System'
-version '1.0.0'
+version '2.0.0'
 
 files {'core/images/*.*'}
 
