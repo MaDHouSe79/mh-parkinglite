@@ -1,16 +1,16 @@
 Config.Vehicles = {
 
     --- Trailers
-    [712162987] = {model = "trailersmall", name = "trailersmall", brand = "Trailer", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
-    [524108981] = {model = "boattrailer",  name = "boattrailer",  brand = "Boattrailer", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
-    [1835260592] = {model = "boattrailer2", name = "boattrailer2", brand = "Boattrailer", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
-    [-877478386] = {model = "trailers", name = "trailers", brand = "Trailers", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
-    [-1579533167] = {model = "trailers2", name = "trailers2", brand = "Trailers", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
-    [-2058878099] = {model = "trailers3", name = "trailers3", brand = "Trailers", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
-    [-100548694] = {model = "trailers4", name = "trailers4", brand = "Trailers", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
-    [-1352468814] = {model = "trflat", name = "trflat", brand = "Trailers", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
-    [2091594960] = {model = "tr4", name = "tr4", brand = "Trailers", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
-    [2078290630] = {model = "tr2", name = "tr2", brand = "Trailers", category = "trailer", type = "automobile", shop = "trailers", price = "10000"},
+    [712162987] = {model = "trailersmall", name = "trailersmall", brand = "Trailer", category = "trailer", type = "trailer", shop = "trailers", price = "10000"},
+    [524108981] = {model = "boattrailer",  name = "boattrailer",  brand = "Boattrailer", category = "trailer", type = "trailer", shop = "trailers", price = "10000"},
+    [1835260592] = {model = "boattrailer2", name = "boattrailer2", brand = "Boattrailer", category = "trailer", type = "trailer", shop = "trailers", price = "10000"},
+    [-877478386] = {model = "trailers", name = "trailers", brand = "Trailers", category = "trailer", type = "trailer", shop = "trailers", price = "10000"},
+    [-1579533167] = {model = "trailers2", name = "trailers2", brand = "Trailers", category = "trailer", type = "trailer", shop = "trailers", price = "10000"},
+    [-2058878099] = {model = "trailers3", name = "trailers3", brand = "Trailers", category = "trailer", type = "trailer", shop = "trailers", price = "10000"},
+    [-100548694] = {model = "trailers4", name = "trailers4", brand = "Trailers", category = "trailer", type = "trailer", shop = "trailers", price = "10000"},
+    [-1352468814] = {model = "trflat", name = "trflat", brand = "Trailers", category = "trailer", type = "trailer", shop = "trailers", price = "10000"},
+    [2091594960] = {model = "tr4", name = "tr4", brand = "Trailers", category = "trailer", type = "trailer", shop = "trailers", price = "10000"},
+    [2078290630] = {model = "tr2", name = "tr2", brand = "Trailers", category = "trailer", type = "trailer", shop = "trailers", price = "10000"},
 
     --- Compacts (0)
     [1549126457] = { model = "brioso", name = "Brioso R/A", brand = "Grotti", category = "compacts", type = "automobile", shop = "pdm", price = "20000" },
