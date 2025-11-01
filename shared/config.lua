@@ -43,6 +43,7 @@ Config.Models = {
 }
 
 -- Police Impound
+Config.UseTimerPark = true
 Config.PayTimeInSecs = 10 -- 10 dollar or euro...
 Config.ParkPrice = 100 -- price to park
 Config.MaxParkTime = 259200 -- 3 Days, after that the vehicle wil be impounded.
