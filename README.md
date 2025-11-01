@@ -1,98 +1,108 @@
-## QB-Parking
+<p align="center">
+    <img width="140" src="https://icons.iconarchive.com/icons/iconarchive/red-orb-alphabet/128/Letter-M-icon.png" />  
+    <h1 align="center">Hi 👋, I'm MaDHouSe</h1>
+    <h3 align="center">A passionate allround developer </h3>    
+</p>
+
+<p align="center">
+    <a href="https://github.com/MaDHouSe79/mh-parking/issues">
+        <img src="https://img.shields.io/github/issues/MaDHouSe79/mh-parking"/> 
+    </a>
+    <a href="https://github.com/MaDHouSe79/mh-parking/watchers">
+        <img src="https://img.shields.io/github/watchers/MaDHouSe79/mh-parking"/> 
+    </a> 
+    <a href="https://github.com/MaDHouSe79/mh-parking/network/members">
+        <img src="https://img.shields.io/github/forks/MaDHouSe79/mh-parking"/> 
+    </a>  
+    <a href="https://github.com/MaDHouSe79/mh-parking/stargazers">
+        <img src="https://img.shields.io/github/stars/MaDHouSe79/mh-parking?color=white"/> 
+    </a>
+    <a href="https://github.com/MaDHouSe79/mh-parking/blob/main/LICENSE">
+        <img src="https://img.shields.io/github/license/MaDHouSe79/mh-parking?color=black"/> 
+    </a>      
+</p>
+
+<p align="center">
+    <img src="https://komarev.com/ghpvc/?username=MaDHouSe79&label=Profile%20views&color=3464eb&style=for-the-badge&logo=star&abbreviated=true" alt="MaDHouSe79" style="padding-right:20px;" />
+</p>
+
+# Youtube
+- [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
+
+# MH-Parking
 This is a very awesome parking mod, that i specially made for [qb-core](https://github.com/qbcore-framework/qb-core) 
 This is just how you park in real live 😁 so park anywhere you want 👊😁👍
 
+# Dependencies
+- [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
 
-## 📸 Screenshot 👊😁👍
-![foto1](https://www.madirc.nl/fivem/foto1.png)
-
-
-## 🎥 Video 👊😁👍
-[![Watch the video1](https://www.madirc.nl/fivem/video.png)](https://youtu.be/cLCthqPRLQQ)
+# Optional
+- [interact-sound](https://github.com/qbcore-framework/interact-sound)
 
 
-## 💪 Dependencies
-- ✅ [oxmysql](https://github.com/overextended/oxmysql/releases/tag/v1.9.3)
-- ✅ [qb-core](https://github.com/qbcore-framework/qb-core)
-- ✅ [qb-vehiclekeys](https://github.com/qbcore-framework/qb-vehiclekeys)
+# QB Shared Vehicles trailers.
+- Change the price or shop is you want.
+```lua
+--- Trailers
+{ model = "trailersmall",    name = "trailersmall",                  brand = "Trailer",         price = 10000,   category = "trailer",        type = "automobile", shop = "trailers" },
+{ model = "boattrailer",     name = "boattrailer",                   brand = "Boattrailer",     price = 10000,   category = "trailer",        type = "automobile", shop = "trailers" },
+{ model = "boattrailer2",    name = "boattrailer2",                  brand = "Boattrailer",     price = 10000,   category = "trailer",        type = "automobile", shop = "trailers" },
+{ model = "trailers",        name = "trailers",                      brand = "Trailers",        price = 10000,   category = "trailer",        type = "automobile", shop = "trailers" },
+{ model = "trailers2",       name = "trailers2",                     brand = "Trailers",        price = 10000,   category = "trailer",        type = "automobile", shop = "trailers" },
+{ model = "trailers3",       name = "trailers3",                     brand = "Trailers",        price = 10000,   category = "trailer",        type = "automobile", shop = "trailers" },
+{ model = "trailers4",       name = "trailers4",                     brand = "Trailers",        price = 10000,   category = "trailer",        type = "automobile", shop = "trailers" },
+{ model = "trflat",          name = "trflat",                        brand = "Trailers",        price = 10000,   category = "trailer",        type = "automobile", shop = "trailers" },
+{ model = "tr4",             name = "tr4",                           brand = "Trailers",        price = 10000,   category = "trailer",        type = "automobile", shop = "trailers" },
+{ model = "tr2",             name = "tr2",                           brand = "Trailers",        price = 10000,   category = "trailer",        type = "automobile", shop = "trailers" },
+```
 
-## 💪 Optional
-- ✅ [interact-sound](https://github.com/qbcore-framework/interact-sound)
+# QB-Vehicleshop (trailer shop)
+```lua
+['trailers'] = {
+    ['Type'] = 'free-use',
+    ['Zone'] = {
+        ['Shape'] = {
+            vector2(980.17779541016, -1144.8859863281),
+            vector2(979.470703125, -1159.9912109375),
+            vector2(957.63580322266, -1159.2982177734),
+            vector2(958.64776611328, -1138.3218994141),
+            vector2(969.24969482422, -1138.6915283203),
+        },
+        ['minZ'] = 22.610145568848,
+        ['maxZ'] = 28.610145568848,
+        ['size'] = 7.0,
+    },
+    ['Job'] = 'none',
+    ['ShopLabel'] = 'Trailer Shop',
+    ['showBlip'] = true,
+    ['blipSprite'] = 479,
+    ['blipColor'] = 3,
+    ['TestDriveTimeLimit'] = 1.5,
+    ['Location'] = vector3(973.4020, -1151.5939, 24.8990),
+    ['ReturnLocation'] = vector3(988.3016, -1165.1842, 25.0336),
+    ['VehicleSpawn'] = vector4(972.8048, -1168.8602, 25.2488, 0.1642),
+    ['TestDriveSpawn'] = vector4(966.4030, -1169.0101, 25.3640, 0.8755),
+    ['FinanceZone'] = vector3(970.8918, -1143.9852, 25.1887),
+    ['ShowroomVehicles'] = {
+        [1] = {
+            coords = vector4(966.6785, -1156.2245, 25.1178, 269.0622),
+            defaultVehicle = 'tr2',
+            chosenVehicle = 'tr2'
+        },
+        [2] = {
+            coords = vector4(966.9294, -1153.0031, 25.0312, 269.7032),
+            defaultVehicle = 'trflat',
+            chosenVehicle = 'trflat'
+        },
+        [3] = {
+            coords = vector4(965.5670, -1146.6980, 24.9106, 269.3104),
+            defaultVehicle = 'boattrailer',
+            chosenVehicle = 'boattrailer'
+        },
+    },
+}
+```
 
-
-## 🙏 How to install and do not forget anything, or it will not work, or give many errors.
-- 👉 Step 1: First stop your server. 😁
-- 👉 Step 2: Copy the directory qb-parking to resources/[qb]/
-- 👉 Step 3: Add the player_parking.sql with 2 tables to your correct database.
-- 👉 Step 4: Add any recommended extra code what I say you should add.
-- 👉 Step 5: If you are 100% sure, you have done all 4 steps correctly, go to step 6.😁
-- 👉 Step 6: Start your server.  
-- 👉 Step 7: Most important step -> Enjoy 👊😎👍
-
-
-## 🍀 Features
-- ✅ Easy to install and use
-- ✅ QB-Phone notifications
-- ✅ Admin Controll like disable or enable the system or set it to only allowed for vip players only.
-- ✅ User Controll like displaying text on screen.
-- ✅ Players with user status will only see the model name of this vecihle, not the owners name or plate.
-- 👉 Your players will love this extra feature, if they can park there own vehicle in front of there housees or clubs. 
-- 👉 Your players can setup youtube scenes, and if they want, they can come back later, and your vechiles are still there.
-- 👉 This is very usefull cause if you make a scene and somehthing goes wrong, then don't wory you vechiles are right there.
-- 👉 And of course you should not forget to park your vehicle 👊😁👍
-
-
-## 🎮 How To Use
-- 👉 Typ "/park" to park or drive your vehicle where you are at that moment. (Users and Admins)
-- 👉 Typ "/park-names if you want to display the names ontop of the vehicle that is parked. (Users and Admins)
-- 👉 If you want to use the F5 button, you must add it to your /binds and add on F5 the word "park"
-
-
-## ⚙️ Settings
-- 👉 Change the max cars that can park in the world space, change the amount from Config.Maxcarparking in the config.lua file. 
-- 👉 Vip users can be added in shared/config.lua => Config.VipPlayers = {} only if you use the vip option.
-- 👉 Knowledge of programming and use your brains cause i'am not going to help you install this mod, cause it's very easy to do.
-
-
-## 💯 What i recommend for using this mod
-- 👉 I recommend to use this mod only for vip players or for players who are most online on you server.
-- 👉 Try not to spawn too many vehicles in world space, this can cause issues and hiccups. 
-- 👉 It is also recommended to have a good computer/server to use this mod, cause you will need it.
-- 👉 To keep the server nice and clean for everyody, use this system only for vip players. 
-
-
-## 💯 I tested this mod on a computer/server with the following settings
-- ✅ Prossessor: I7 12xCore
-- ✅ Memory: 16 gig memory
-- ✅ Graphics: GTX 1050 TI 4GB
-
-
-## 🙏 Don't do this...
-- 👉 DO NOT park your vehicles on roofs or that kind of stuff, just don't do it, it will work, but it breaks the mod,
-- 👉 use the recommended parking spots in the world like you do in real life,
-- 👉 you can do of course just park at your own house on a parking spot to keep it nice and clean for everyone.
-
-
-## 👇 To keep things nice and clean for the qb-core system and database.
-- ✅ Go to resources[qb]/qb-core/server/player.lua around line 506, and find, local playertables = {}. 
-- ✅ This is, if we want to delete a character, we also want to delete the parked vehicles in the database,
-- ✅ Place the line below at the bottom in playertables (there are more insite), so place this one at the bottom.
-````lua
-{ table = 'player_parking' },
-````
-
-
-## ⚙️ To get a other languages.
-- 1: copy a file from the resources[qb]/qb-parking/locales directory
-- 2: rename this file for example fr.lua or sp.lua
-- 3: translate the lines in the file to your language
-- 4: you now have added a new language to the system, enjoy 😎
-
-
-## 🐞 Any bugs issues or suggestions, let my know.
-- If you have any suggestions or nice ideas let me know and we can see what we can do 👊😎
-- Keep it nice and clean for everybody and have fun with this awesome qb-parking mod 😎👍
-
-
-## 🙈 Youtube
-- [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
+# LICENSE
+[GPL LICENSE](./LICENSE)<br />
+&copy; [MaDHouSe79](https://www.youtube.com/@MaDHouSe79)

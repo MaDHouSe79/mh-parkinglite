@@ -1,212 +1,223 @@
-local QBCore = exports['qb-core']:GetCoreObject()
-local updateavail = false
+local hasSpawned = false
+local parkedVehicles = {}
 
+local vehicleTypes = {
+    motorcycles = 'bike',
+    boats = 'boat',
+    helicopters = 'heli',
+    planes = 'plane',
+    submarines = 'submarine',
+    trailer = 'trailer',
+    train = 'train'
+}
 
--- Get Player username
-local function GetUsername(player)
-    local tmpName = player.PlayerData.name
-    if Config.useRoleplayName then
-	tmpName = player.PlayerData.charinfo.firstname ..' '.. player.PlayerData.charinfo.lastname
-    end
-    return tmpName
-end
-
--- Get Citizenid
-local function GetCitizenid(player)
-    return player.PlayerData.citizenid
-end
-
--- Get all vehicles the player owned.
-local function FindPlayerVehicles(citizenid, cb)
-    local vehicles = {}
-    MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE citizenid = ?", {citizenid}, function(rs)
-        for k, v in pairs(rs) do
-	    vehicles[#vehicles+1] = {plate = v.plate}
-	    TriggerClientEvent('mh-parking:client:addkey', v.plate, v.citizenid)
+local function DeleteVehicleAtcoords(coords)
+    local closestVehicle, closestDistance = GetClosestVehicle(coords)
+    if closestVehicle ~= -1 and closestDistance <= 2.0 then
+        DeleteEntity(closestVehicle)
+        while DoesEntityExist(closestVehicle) do
+            DeleteEntity(closestVehicle)
+            Wait(0)
         end
-        cb(vehicles)
-    end)
-end
-
-
--- Get the number of the vehicles.
-local function GetVehicleNumOfParking()
-    local rs = MySQL.Async.fetchAll('SELECT id FROM player_parking', {})
-    if type(rs) == 'table' then
-        return #rs
-    else
-        return 0
     end
 end
 
--- Refresh client local vehicles entities.
-local function RefreshVehicles(src)
-    if src == nil then src = -1 end
-        local vehicles = {}
-        MySQL.Async.fetchAll("SELECT * FROM player_parking", {}, function(rs)
-        if type(rs) == 'table' and #rs > 0 then
-            for k, v in pairs(rs) do
-                vehicles[#vehicles+1] = {
-                    vehicle     = json.decode(v.data),
-                    plate       = v.plate,
-                    citizenid   = v.citizenid,
-                    citizenname = v.citizenname,
-                    model       = v.model,
-		    fuel        = v.fuel,
-		    oil         = v.oil,
+local function CreateVehicle2(model, type, coords, heading)
+    if heading == nil then heading = coords.w end
+    local veh = CreateVehicleServerSetter(model, type, coords.x, coords.y, coords.z, heading)
+    local netId = NetworkGetNetworkIdFromEntity(veh)
+    return veh, netId
+end
+
+local function SpawnVehicles(src)
+    hasSpawned = true
+    parkedVehicles = {}
+    local vehicles = nil
+    if Config.Framework == 'esx' then
+        vehicles = MySQL.query.await("SELECT * FROM owned_vehicles WHERE stored = ?", {3})
+        vehicles.state = vehicles.stored
+    elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+        vehicles = MySQL.query.await("SELECT * FROM player_vehicles WHERE state = ?", {3})
+    end
+    if type(vehicles) == 'table' and #vehicles >= 1 then
+        for k, vehicle in pairs(vehicles) do
+            if not parkedVehicles[vehicle.plate] then
+                parkedVehicles[vehicle.plate] = {}
+                local coords = json.decode(vehicle.location)
+                local mods = json.decode(vehicle.mods)
+                DeleteVehicleAtcoords(vector3(coords.x, coords.y, coords.z))
+                Wait(100)
+                local entity, netid = CreateVehicle2(GetHashKey(vehicle.vehicle), 'automobile', coords, coords.w)
+                while not DoesEntityExist(entity) do Wait(0) end
+                local netid = NetworkGetNetworkIdFromEntity(entity)
+                SetVehicleNumberPlateText(entity, mods.plate)
+                local target = GetPlayerDataByCitizenId(vehicle.citizenid)
+                local fullname = target.PlayerData.charinfo.firstname .. ' ' .. target.PlayerData.charinfo.lastname
+                parkedVehicles[vehicle.plate] = {
+                    fullname = fullname,
+                    citizenid = vehicle.citizenid,
+                    owner = vehicle.citizenid,
+                    netid = netid,
+                    entity = entity,
+                    mods = mods,
+                    hash = vehicle.hash,
+                    plate = vehicle.plate,
+                    model = vehicle.vehicle,
+                    fuel = vehicle.fuel,
+                    body = vehicle.body,
+                    engine = vehicle.engine,
+                    street = vehicle.street,
+                    steerangle = vehicle.steerangle,
+                    location = coords,
                 }
-                if QBCore.Functions.GetPlayer(src) ~= nil and QBCore.Functions.GetPlayer(src).PlayerData.citizenid == v.citizenid then
-                    if not Config.ImUsingOtherKeyScript then
-			TriggerClientEvent('mh-parking:client:addkey', v.plate, v.citizenid)
-                    end
-                end
             end
-            TriggerClientEvent("mh-parking:client:refreshVehicles", src, vehicles)
         end
-    end)
+        TriggerClientEvent("mh-parkinglite:client:onjoin", -1, {status = true, vehicles = parkedVehicles})
+    end
 end
 
-local function SaveData(Player, data)
-    MySQL.Async.execute("INSERT INTO player_parking (citizenid, citizenname, plate, fuel, oil, model, data, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", {
-	GetCitizenid(Player),
-	GetUsername(Player),
-	data.plate,
-	data.fuel,
-	data.oil,
-	data.model,
-	json.encode(data),
-	os.time(),
-    })
-    MySQL.Async.execute('UPDATE player_vehicles SET state = 3 WHERE plate = ? AND citizenid = ?', {data.plate, GetCitizenid(Player)})
-    TriggerClientEvent("qb-parking:client:addVehicle", -1, {
-	vehicle     = data,
-	plate       = data.plate, 
-	fuel        = data.fuel,
-	oil         = data.oil,
-	citizenid   = GetCitizenid(Player), 
-	citizenname = GetUsername(Player),
-	model       = data.model,
-    })
+local function GetVehicleTypeByModel(model)
+    local vehicleData = Config.Vehicles[model]
+    if not vehicleData then return 'automobile' end
+    local category = vehicleData.category
+    local vehicleType = vehicleTypes[category]
+    return vehicleType or 'automobile'
 end
 
+local function IsPlayerAVip(citizenid)
+    local player = MySQL.query.await("SELECT * FROM players WHERE citizenid = ?", {citizenid})[1]
+    if player ~= nil and player.parkvip ~= nil and player.parkvip == 1 then return true end
+    return false
+end
+
+local function GetPlayerVipParkMax(citizenid)
+    local player = MySQL.query.await("SELECT * FROM players WHERE citizenid = ?", {citizenid})[1]
+    if player ~= nil and player.parkvip ~= nil and player.parkvip == 1 and player.parkmax ~= nil then return player.parkmax end
+    return 0
+end
+
+local function GetAmountOfParkedVehiclesByCitizenid(citizenid)
+    local result = MySQL.query.await("SELECT * FROM player_vehicles WHERE citizenid = ? AND state = ?", {citizenid, 3})
+    if result ~= nil and #result >= 1 then 
+        return tonumber(#result)
+    else
+        return 0 
+    end
+end
 
 -- Save the car to database
-QBCore.Functions.CreateCallback("qb-parking:server:save", function(source, cb, vehicleData)
-    if UseParkingSystem then
-	local src = source
-	local Player = QBCore.Functions.GetPlayer(src)
-	local plate = vehicleData.plate
-	local isFound = false
-	FindPlayerVehicles(GetCitizenid(Player), function(vehicles)
-	    for k, v in pairs(vehicles) do
-		if plate == v.plate then
-		    isFound = true
-		end		
-	    end
-	    if isFound then
-		MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ? AND plate = ?", {GetCitizenid(Player), plate}, function(rs)
-		    if type(rs) == 'table' and #rs > 0 then
-			cb({status = false, message = Lang:t("info.car_already_parked")})
-		    else
-			if #rs < Config.Maxcarparking then
-			    SaveData(Player, vehicleData)
-			    cb({status = true, message = Lang:t("success.parked")})
-		        else 
-			    cb({status = true, message = Lang:t("info.maximum_cars", {value = Config.Maxcarparking}),})
-			end
-		    end
-		end)	
-	    end
-	end)
-    else 
-	cb({status = false, message = Lang:t("system.offline")})
+CreateCallback("mh-parkinglite:server:save", function(source, cb, data)
+    local src = source
+    local Player = GetPlayer(src)
+    local defaultParking = Config.MaxParkingPerPlayer
+    local citizenid = Player.PlayerData.citizenid
+    local result = MySQL.query.await("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ?", {citizenid, data.plate})[1]
+    if result ~= nil and result.state ~= nil and type(result.state) == 'number' then
+        if result.state == 3 then
+            cb({status = false, message = Lang:t("info.car_already_parked")})
+            return
+        elseif result.state == 0 then
+            if Config.UseVip then
+                local isvip = IsPlayerAVip(citizenid)
+                if isvip then
+                    defaultParking = GetPlayerVipParkMax(citizenid)
+                else
+                    cb({status = false, message = "You are not a Parking VIP Member..."})
+                    return 
+                end
+            end
+            local count = GetAmountOfParkedVehiclesByCitizenid(citizenid)
+            if count >= defaultParking then
+                cb({status = false, message = Lang:t("info.limit_parking",{limit = defaultParking})})
+                return
+            end
+            MySQL.Async.execute('UPDATE player_vehicles SET state = ?, location = ?, mods = ?, trailerdata = ? WHERE plate = ? AND citizenid = ?', {3, json.encode(data.location), json.encode(data.mods), json.encode(data.trailerdata), data.plate, citizenid})
+            local _data = { netid = data.netid, citizenid = result.citizenid, model = result.vehicle, plate = result.plate, body = result.body, engine = result.engine, fuel = result.fuel, mods = json.decode(result.mods), location = data.location, trailerdata = data.trailerdata}
+            TriggerClientEvent("mh-parkinglite:client:addVehicle", -1, _data)
+            cb({status = true, message = Lang:t("info.vehicle_parked")})
+            return  
+        end
     end
 end)
 
 -- When player request to drive the car
-QBCore.Functions.CreateCallback("mh-parking:server:drive", function(source, cb, vehicleData)
-    if UseParkingSystem then
-	local src = source
-	local Player = QBCore.Functions.GetPlayer(src)
-	local plate = vehicleData.plate
-	local isFound = false
-	FindPlayerVehicles(GetCitizenid(Player), function(vehicles)
-	    for k, v in pairs(vehicles) do
-	        if plate == v.plate then
-		    isFound = true
-		end
-	    end
-	    if isFound then
-	        MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ? AND plate = ?", {GetCitizenid(Player), plate}, function(rs)
-		    if type(rs) == 'table' and #rs > 0 and rs[1] then
-			MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ? AND citizenid = ?', {plate, GetCitizenid(Player)})
-			MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = ? AND citizenid = ?', {plate, GetCitizenid(Player)})
-			cb({
-			    status  = true,
-			    message = Lang:t("info.has_take_the_car"),
-			    data    = json.decode(rs[1].data),
-			    fuel    = rs[1].fuel,
-			})
-			TriggerClientEvent("mh-parking:client:deleteVehicle", -1, { plate = plate })
-		    end
-		end)			
-	    end
-	end)
-    else 
-        cb({status = false, message = Lang:t("system.offline")})
+CreateCallback("mh-parkinglite:server:drive", function(source, cb, data)
+    local src = source
+    local Player = GetPlayer(src)
+    local citizenid = Player.PlayerData.citizenid
+    local isFound = false
+    local result = MySQL.query.await("SELECT * FROM player_vehicles WHERE citizenid = ? AND plate = ?", {citizenid, data.plate})[1]
+    if result ~= nil and result.state ~= nil and type(result.state) == 'number' then
+        if result.state == 3 then
+            MySQL.Async.execute('UPDATE player_vehicles SET state = ? WHERE plate = ? AND citizenid = ?', {0, data.plate, citizenid})
+            TriggerClientEvent("mh-parkinglite:client:deleteVehicle", -1, data.plate)
+            cb({status = true, message = Lang:t("info.has_take_the_car")})
+            return 
+        elseif result.state < 3 then
+            cb({status = false, message = Lang:t('info.car_not_found')})     
+        end
     end
 end)
 
-QBCore.Functions.CreateCallback("mh-parking:server:vehicle_action", function(source, cb, plate, action)
-    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = ?", {plate}, function(rs)
-	if type(rs) == 'table' and #rs > 0 and rs[1] then
-	    MySQL.Async.execute('DELETE FROM player_parking WHERE plate = ?', {plate})
-	    if action == 'impound' then
-	        MySQL.Async.execute('UPDATE player_vehicles SET state = 2, garage = ? WHERE plate = ? AND citizenid = ?', {'impoundlot', plate, rs[1].citizenid})
-	    else
-	        MySQL.Async.execute('UPDATE player_vehicles SET state = 0 WHERE plate = ?', {plate})
-	    end
-	    cb({ status  = true })
-	    TriggerClientEvent("mh-parking:client:deleteVehicle", -1, { plate = plate })
-	else
-	    cb({status = false, message = Lang:t("info.car_not_found")})
-	end
-    end)
+CreateCallback('mh-parkinglite:server:spawnvehicle', function(source, cb, plate, model, coords)
+    local vehType = Config.Vehicles[model] and Config.Vehicles[model].type or GetVehicleTypeByModel(model)
+    local veh = CreateVehicleServerSetter(GetHashKey(model), vehType, coords.x, coords.y, coords.z, coords.w)
+    while not DoesEntityExist(veh) do Wait(1) end
+    local netId = NetworkGetNetworkIdFromEntity(veh)
+    SetVehicleNumberPlateText(veh, plate)
+    local result = MySQL.query.await('SELECT * FROM player_vehicles WHERE plate = ? LIMIT 1', {plate})[1]
+    if result then cb({netid = netId, citizenid = result.citizenid, model = result.vehicle, plate = plate, body = result.body, engine = result.engine, fuel = result.fuel, mods = json.decode(result.mods), location = coords, trailerdata = json.decode(result.trailerdata)}) end
+    cb(nil)
 end)
 
--- Reset state and counting to stay in sync.
-AddEventHandler('onResourceStart', function(resource)
-    if resource == GetCurrentResourceName() then
-        Wait(2000)
-	print("[qb-parking] - parked vehicles state check reset.")
-	MySQL.Async.fetchAll("SELECT * FROM player_vehicles WHERE state = 0 OR state = 1 OR state = 2", {}, function(vehicles)
-            if type(vehicles) == 'table' and #vehicles > 0 then
-	        for _, vehicle in pairs(vehicles) do
-		    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE plate = ?", {vehicle.plate}, function(rs)
-			if type(rs) == 'table' and #rs > 0 then
-                            for _, v in pairs(rs) do
-				MySQL.Async.execute('DELETE FROM player_parking WHERE plate = @plate', {["@plate"] = vehicle.plate})
-				MySQL.Async.execute('UPDATE player_vehicles SET state = @state WHERE plate = @plate', {["@state"] = Config.ResetState, ["@plate"] = vehicle.plate})					
-			    end
-			end
-		    end)
-		end
-	    end
-	end)
+CreateCallback("mh-parkinglite:server:GetVehicles", function(source, cb)
+    local src = source
+    local citizenid = GetCitizenId(src)
+    local result = nil
+    if Config.Framework == 'esx' then
+        result = MySQL.query.await("SELECT * FROM owned_vehicles WHERE owner = ? AND stored = ? ORDER BY id ASC", {citizenid, 3})
+        result.state = result.stored
+    elseif Config.Framework == 'qb' or Config.Framework == 'qbx' then
+        result = MySQL.query.await("SELECT * FROM player_vehicles WHERE citizenid = ? AND state = ? ORDER BY id ASC", {citizenid, 3})
     end
+    cb({status = true, data = result})
 end)
 
-RegisterServerEvent('mh-parking:server:onjoin', function(id, citizenid)
-    MySQL.Async.fetchAll("SELECT * FROM player_parking WHERE citizenid = ?", {citizenid}, function(vehicles)
-        for k, v in pairs(vehicles) do
-            if v.citizenid == citizenid then
-                TriggerClientEvent('mh-parking:client:addkey', id, v.plate, v.citizenid)
+RegisterNetEvent('mh-parkinglite:server:AllPlayersLeaveVehicle', function(vehicleNetID, players)
+    if players ~= nil and #players >= 1 then
+        local vehicle = NetworkGetEntityFromNetworkId(vehicleNetID)
+        if DoesEntityExist(vehicle) then
+            for i = 1, #players, 1 do
+                TriggerClientEvent('mh-parkinglite:client:leaveVehicle', players[i].playerId, {vehicleNetID = vehicleNetID})
             end
         end
-    end)
+    end
 end)
 
--- When the client request to refresh the vehicles.
-RegisterServerEvent('mh-parking:server:refreshVehicles', function(parkingName)
-    RefreshVehicles(source)
+AddCommand(Config.Command.parkmenu, "", {}, true, function(source, args)
+    local src = source
+    TriggerClientEvent('mh-parkinglite:client:OpenParkMenu', src, {status = true})
+end)
+
+AddCommand(Config.Command.parknames, "", {}, true, function(source, args)
+    local src = source
+    TriggerClientEvent('mh-parkinglite:client:ToggleParknames', src, {status = true})
+end)
+
+
+RegisterServerEvent('mh-parkinglite:server:onjoin', function()
+    local src = source
+    local players = GetPlayers()
+    if #players <= 1 then
+        if not hasSpawned then
+            hasSpawned = true
+            SpawnVehicles(src)
+        end
+    elseif #players > 1 then
+        if not hasSpawned then
+            hasSpawned = true
+            SpawnVehicles(#players)
+        end
+    end
+    TriggerClientEvent("mh-parkinglite:client:onjoin", src, {status = true, vehicles = parkedVehicles})
 end)
