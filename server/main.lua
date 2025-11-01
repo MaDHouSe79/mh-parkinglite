@@ -239,8 +239,8 @@ end)
 RegisterNetEvent('police:server:Impound', function(plate, fullImpound, price, body, engine, fuel)
     local src = source
     if parkedVehicles[plate] and parkedVehicles[plate].netid ~= false and parkedVehicles[plate].entity ~= false then
-        RemoveVehicle(parkedVehicles[plate].netid)
-        TriggerClientEvent('mh-parking:client:RemoveVehicle', -1, {netid = parkedVehicles[plate].netid, entity = parkedVehicles[plate].entity, owner = parkedVehicles[plate].owner, plate = parkedVehicles[plate].plate})
+        parkedVehicles[plate] = nil
+        TriggerClientEvent("mh-parkinglite:client:deleteVehicle", -1, {status = true, plate = plate})
     end
 end)
 
@@ -258,6 +258,7 @@ local function ParkingTimeCheckLoop()
                 if v.parktime > 0 and total > v.parktime then
                     print("[MH Parking] - [Time Limit Detection] - Vehicle with plate: ^2" .. v.plate .. "^7 has been impound by the police.")
                     if parkedVehicles[v.plate] and parkedVehicles[v.plate].netid ~= false and parkedVehicles[v.plate].entity ~= false then
+                        parkedVehicles[v.plate] = nil
                         TriggerClientEvent("mh-parkinglite:client:deleteVehicle", -1, {status = true, plate = v.plate})
                     end
                     local cost = (math.floor(((os.time() - v.time) / Config.PayTimeInSecs) * Config.ParkPrice))
