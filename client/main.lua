@@ -8,6 +8,7 @@ local currentVehicle = nil
 local currentSeat = nil
 local currentPlate = nil
 local display3Dtext = Config.Display3DText
+local saveSteeringAngle = Config.SaveSteeringAngle
 
 local function DoesPlateExist(plate)
     for i = 1, #LocalVehicles do
@@ -30,6 +31,8 @@ local function TableInsert(entity, data)
             body = data.body,
             engine = data.engine,
             fuel = data.fuel,
+            steerangle = data.steerangle,
+            street = data.street,
             location = {x = data.location.x, y = data.location.y, z = data.location.z + 0.5, w = data.location.w},
         }
     end
@@ -129,6 +132,10 @@ local function Save(vehicle)
         }
     end
     local mods = GetVehicleProperties(vehicle)
+    local coords = GetEntityCoords(vehicle)
+    local heading = GetEntityHeading(vehicle)    
+    local steerangle = GetVehicleSteeringAngle(vehicle) + 0.0
+    local street = GetStreetName(coords)
     TriggerCallback("mh-parkinglite:server:save", function(callback)
         if callback.status then
             if Config.FreezeVehicles then FreezeEntityPosition(vehicle, true) end
@@ -144,7 +151,9 @@ local function Save(vehicle)
         fual = GetFuel(vehicle),
         mods = mods,
         model = mods.model,
-        location = vector4(GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z - 0.5, GetEntityHeading(vehicle)),
+        street = street,
+        steerangle = steerangle,
+        location = vector4(coords.x, coords.y, coords.z - 0.5, heading),
         trailerdata = trailerdata        
     })
 end
@@ -183,11 +192,11 @@ RegisterNetEvent(OnJobUpdate, function(job)
 end)
 
 RegisterNetEvent("mh-parkinglite:client:OpenParkMenu", function(data)
-    if data.status then GetVehicleMenu() end
+    if data.status == true then GetVehicleMenu() end
 end)
 
 RegisterNetEvent("mh-parkinglite:client:ToggleParknames", function(data)
-    if data.status then 
+    if data.status == true then 
         display3Dtext = not display3Dtext
         if display3Dtext then
             Notify("Vehicle 3D text is now enable", "success", 5000)
@@ -197,59 +206,73 @@ RegisterNetEvent("mh-parkinglite:client:ToggleParknames", function(data)
     end
 end)
 
-RegisterNetEvent("mh-parkinglite:client:addVehicle", function(data)
-    if NetworkDoesEntityExistWithNetworkId(data.netid) then
-        NetworkRequestControlOfNetworkId(data.netid)
-        local vehicle = NetworkGetEntityFromNetworkId(data.netid)
-        if DoesEntityExist(vehicle) then
-            SetVehicleProperties(vehicle, data.mods)
-            DoVehicleDamage(vehicle, data.body, data.engine)
-            SetFuel(vehicle, data.fuel + 0.0)
-            SetVehicleKeepEngineOnWhenAbandoned(vehicle, true)
-            TableInsert(vehicle, data)
+RegisterNetEvent("mh-parkinglite:client:ToggleSaveSteeringAngle", function(data)
+    if data.status == true then 
+        saveSteeringAngle = not saveSteeringAngle
+        if saveSteeringAngle then
+            Notify("Save Steering Angle is now enable", "success", 5000)
+        else
+            Notify("Save Steering Angle is now disable", "success", 5000)
         end
     end
 end)
 
-RegisterNetEvent("mh-parkinglite:client:deleteVehicle", function(plate)
-    if type(LocalVehicles) == 'table' and #LocalVehicles >= 1 then
-        for i = 1, #LocalVehicles do
-            if LocalVehicles[i] ~= nil and LocalVehicles[i].plate ~= nil and LocalVehicles[i].plate == plate then
-                table.remove(LocalVehicles, i)
+RegisterNetEvent("mh-parkinglite:client:addVehicle", function(data)
+    if data.status == true then
+        if NetworkDoesEntityExistWithNetworkId(data.vehicle.netid) then
+            NetworkRequestControlOfNetworkId(data.vehicle.netid)
+            local vehicle = NetworkGetEntityFromNetworkId(data.vehicle.netid)
+            if DoesEntityExist(vehicle) then
+                SetVehicleProperties(vehicle, data.vehicle.mods)
+                DoVehicleDamage(vehicle, data.vehicle.body, data.vehicle.engine)
+                SetFuel(vehicle, data.vehicle.fuel + 0.0)
+                SetVehicleKeepEngineOnWhenAbandoned(vehicle, true)
+                TableInsert(vehicle, data)
+            end
+        end
+    end
+end)
+
+RegisterNetEvent("mh-parkinglite:client:deleteVehicle", function(data)
+    if data.status == true then
+        if type(LocalVehicles) == 'table' and #LocalVehicles >= 1 then
+            for i = 1, #LocalVehicles do
+                if LocalVehicles[i] ~= nil and LocalVehicles[i].plate ~= nil and LocalVehicles[i].plate == data.plate then
+                    table.remove(LocalVehicles, i)
+                end
             end
         end
     end
 end)
 
 RegisterNetEvent('mh-parkinglite:client:onjoin', function(data)
-    if data.status then
-        if data.status == true then
-            local vehicles = data.vehicles
-            for k, v in pairs(vehicles) do
-                while not NetworkDoesEntityExistWithNetworkId(v.netid) do Wait(0) end
-                if NetworkDoesEntityExistWithNetworkId(v.netid) then
-                    NetworkRequestControlOfNetworkId(v.netid)
-                    local vehicle = NetworkGetEntityFromNetworkId(v.netid)
-                    if DoesEntityExist(vehicle) then
-                        SetEntityAsMissionEntity(vehicle, true, true)
-                        SetVehicleProperties(vehicle, v.mods)
-                        DoVehicleDamage(vehicle, v.body, v.engine)
-                        SetFuel(vehicle, v.fuel + 0.0)
-                        SetVehicleKeepEngineOnWhenAbandoned(vehicle, true)
-                        local coords = GetEntityCoords(vehicle)
-                        local heading = GetEntityHeading(vehicle)
-                        SetVehicleKeepEngineOnWhenAbandoned(vehicle, true)
-                        TableInsert(vehicle, v)
-                    end
+    if data.status == true then
+        local vehicles = data.vehicles
+        for k, v in pairs(vehicles) do
+            while not NetworkDoesEntityExistWithNetworkId(v.netid) do Wait(0) end
+            if NetworkDoesEntityExistWithNetworkId(v.netid) then
+                NetworkRequestControlOfNetworkId(v.netid)
+                local vehicle = NetworkGetEntityFromNetworkId(v.netid)
+                if DoesEntityExist(vehicle) then
+                    SetEntityAsMissionEntity(vehicle, true, true)
+                    SetVehicleProperties(vehicle, v.mods)
+                    SetVehicleSteeringAngle(vehicle, v.steerangle + 0.0)
+                    DoVehicleDamage(vehicle, v.body, v.engine)
+                    SetFuel(vehicle, v.fuel + 0.0)
+                    SetVehicleKeepEngineOnWhenAbandoned(vehicle, true)
+                    local coords = GetEntityCoords(vehicle)
+                    local heading = GetEntityHeading(vehicle)
+                    SetVehicleKeepEngineOnWhenAbandoned(vehicle, true)
+                    TableInsert(vehicle, v)
                 end
             end
-            Wait(1500)
-            if Config.FreezeVehicles then
-                for i = 1, #LocalVehicles, 1 do
-                    if LocalVehicles[i].entity ~= nil then
-                        if DoesEntityExist(LocalVehicles[i].entity) then
-                            FreezeEntityPosition(LocalVehicles[i].entity, true)
-                        end
+        end
+        Wait(1500)
+        if Config.FreezeVehicles then
+            for i = 1, #LocalVehicles, 1 do
+                if LocalVehicles[i].entity ~= nil then
+                    if DoesEntityExist(LocalVehicles[i].entity) then
+                        FreezeEntityPosition(LocalVehicles[i].entity, true)
                     end
                 end
             end
@@ -258,11 +281,32 @@ RegisterNetEvent('mh-parkinglite:client:onjoin', function(data)
 end)
 
 RegisterNetEvent('mh-parkinglite:client:leaveVehicle', function(data)
-    LeaveVehicle(data)
+    if data.status == true then LeaveVehicle(data) end
 end)
 
 RegisterNetEvent('mh-parkinglite:client:notify', function(data)
-    if data.status then Notify(data.message, data.type, data.length) end
+    if data.status == true then Notify(data.message, data.type, data.length) end
+end)
+
+-- Set Steering Angle to save when parking the vehicle.
+CreateThread(function()
+    local angle, speed = 0.0, 0.0
+    while true do
+        Wait(0)
+        if isLoggedIn and saveSteeringAngle and isInVehicle then
+            local veh = GetVehiclePedIsUsing(PlayerPedId())
+            if DoesEntityExist(veh) then
+                local tangle = GetVehicleSteeringAngle(veh)
+                if tangle > 10.0 or tangle < -10.0 then angle = tangle end
+                speed = GetEntitySpeed(veh)
+                local vehicle = GetVehiclePedIsIn(PlayerPedId(), true)
+                if speed < 0.1 and DoesEntityExist(vehicle) and not GetIsTaskActive(PlayerPedId(), 151) and
+                    not GetIsVehicleEngineRunning(vehicle) then
+                    SetVehicleSteeringAngle(vehicle, angle)
+                end
+            end
+        end
+    end
 end)
 
 -- Draw 3D vehicle text
@@ -366,6 +410,7 @@ CreateThread(function()
     end
 end)
 
+-- Check if player is in vehicle or not
 CreateThread(function()
     while true do
         local sleep = 1000

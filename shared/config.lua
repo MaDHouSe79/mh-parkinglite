@@ -13,6 +13,7 @@ Config.DisplayToCopPlayers = true
 Config.DisplayDistance = 5
 
 Config.AutoParkWhenEngineIsOff = true
+Config.SaveSteeringAngle = true
 
 Config.UseVip = true
 Config.MaxParkingPerPlayer = 5 -- This if for NOT vip mode enable
@@ -23,4 +24,5 @@ Config.Command = {
     park = 'park',
     parknames = 'park-names',
     parkmenu = 'parkmenu',
+    togglesteerangle = 'togglesteerangle',
 }
