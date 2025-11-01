@@ -7,7 +7,7 @@ Config.UseAutoPark = true
 Config.ParkButton = 166 -- F5
 Config.KeyBindButton = "F5" -- 166
 
-Config.Display3DText = true
+Config.Display3DText = false
 Config.DisplayToAllPlayers = true
 Config.DisplayToCopPlayers = true
 Config.DisplayDistance = 5
